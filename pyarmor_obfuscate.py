@@ -271,34 +271,32 @@ def run_pyarmor_batch(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # 构建PyArmor命令
+    # PyArmor 8.x command syntax
     cmd = [
         sys.executable, "-m", "pyarmor",
         "gen",
         "--output", str(output_dir),
-        "--obf-code", "2",
-        "--obf-mod", "2",
         "--restrict", "4",
         "--recursive",
+        "--enable-jit",
     ]
     
+    # PyArmor 8.x uses different flags
     if advanced:
-        cmd.append("--advanced")
+        cmd.append("--private")
     
     if string_encrypt:
-        cmd.append("--enable-str-crypto")
+        cmd.append("--assert-call")
     
-    cmd.append("--wrap-mode")
-    
-    # 添加排除模式
+    # Add exclude patterns
     for pattern in EXCLUDE_PATTERNS:
         if pattern.endswith(".py") or pattern.startswith("*"):
             cmd.extend(["--exclude", pattern])
     
-    # 添加入口文件
+    # Add entry file
     cmd.append(str(project_root / "main.py"))
     
-    print(f"执行PyArmor批量加密命令: {' '.join(cmd)}")
+    print(f"Running PyArmor command: {' '.join(cmd)}")
     
     try:
         result = subprocess.run(
@@ -306,24 +304,24 @@ def run_pyarmor_batch(
             cwd=project_root,
             capture_output=True,
             text=True,
-            timeout=7200,  # 2小时超时
+            timeout=7200,  # 2 hour timeout
         )
         
         if result.returncode == 0:
-            print("✓ PyArmor批量加密成功")
-            print(f"输出目录: {output_dir}")
+            print("PyArmor batch encryption successful")
+            print(f"Output directory: {output_dir}")
             return True
         else:
-            print("✗ PyArmor批量加密失败")
+            print("PyArmor batch encryption failed")
             print(f"stdout: {result.stdout}")
             print(f"stderr: {result.stderr}")
             return False
             
     except subprocess.TimeoutExpired:
-        print("✗ PyArmor批量加密超时")
+        print("PyArmor batch encryption timeout")
         return False
     except Exception as e:
-        print(f"✗ PyArmor批量加密异常: {e}")
+        print(f"PyArmor batch encryption error: {e}")
         return False
 
 
@@ -425,19 +423,27 @@ def main():
     print(f"批量加密: {args.batch}")
     print("=" * 60)
     
-    # 检查PyArmor是否安装
+    # Check PyArmor installation
     try:
-        import pyarmor
-        print(f"✓ PyArmor版本: {pyarmor.__version__}")
-    except ImportError:
-        print("✗ PyArmor未安装，正在安装...")
-        subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor"])
-        try:
-            import pyarmor
-            print(f"✓ PyArmor版本: {pyarmor.__version__}")
-        except ImportError:
-            print("✗ PyArmor安装失败，请手动安装: pip install pyarmor")
-            sys.exit(1)
+        result = subprocess.run(
+            [sys.executable, "-m", "pyarmor", "--version"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            print(f"PyArmor installed: {result.stdout.strip()}")
+        else:
+            print("PyArmor not found, installing...")
+            subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor"], check=True)
+            result = subprocess.run(
+                [sys.executable, "-m", "pyarmor", "--version"],
+                capture_output=True,
+                text=True
+            )
+            print(f"PyArmor installed: {result.stdout.strip()}")
+    except Exception as e:
+        print(f"PyArmor check failed: {e}")
+        sys.exit(1)
     
     # 执行加密
     if args.batch:
