@@ -28,17 +28,23 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pyinstaller pyarmor
+          pip install pyinstaller "pyarmor==7.7.4"
           pip install -r requirements.txt
+
+      - name: Verify PyArmor installation
+        run: |
+          pyarmor --version
 
       - name: Run PyArmor encryption
         run: |
           python pyarmor_obfuscate.py
+        working-directory: ${{ github.workspace }}
 
       - name: Build with PyInstaller
         run: |
           set ENCRYPTED_BUILD=1
           pyinstaller kunlun.spec --clean
+        working-directory: ${{ github.workspace }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -83,16 +89,22 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pyinstaller pyarmor
+          pip install pyinstaller "pyarmor==7.7.4"
           pip install -r requirements.txt
+
+      - name: Verify PyArmor installation
+        run: |
+          pyarmor --version
 
       - name: Run PyArmor encryption
         run: |
           python pyarmor_obfuscate.py
+        working-directory: ${{ github.workspace }}
 
       - name: Build with PyInstaller
         run: |
           ENCRYPTED_BUILD=1 pyinstaller kunlun.spec --clean
+        working-directory: ${{ github.workspace }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -132,16 +144,22 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pyinstaller pyarmor
+          pip install pyinstaller "pyarmor==7.7.4"
           pip install -r requirements.txt
+
+      - name: Verify PyArmor installation
+        run: |
+          pyarmor --version
 
       - name: Run PyArmor encryption
         run: |
           python pyarmor_obfuscate.py
+        working-directory: ${{ github.workspace }}
 
       - name: Build with PyInstaller
         run: |
           ENCRYPTED_BUILD=1 pyinstaller kunlun.spec --clean
+        working-directory: ${{ github.workspace }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

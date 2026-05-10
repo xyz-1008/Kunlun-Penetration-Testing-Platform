@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 KunLun Penetration Testing Platform - PyArmor Encryption Script
-PyArmor 8.x compatible - uses 'gen' command
+PyArmor 7.x compatible - uses 'obfuscate' command
 """
 
 import os
 import sys
 import shutil
-import argparse
 import subprocess
 from pathlib import Path
 
@@ -40,8 +39,8 @@ DATA_DIRS = [
 ]
 
 
-def run_pyarmor_gen():
-    """使用 PyArmor 8.x gen 命令加密项目"""
+def run_pyarmor_obfuscate():
+    """使用 PyArmor 7.x obfuscate 命令加密项目"""
     output_dir = DEFAULT_OUTPUT
     
     # 清理输出目录
@@ -49,15 +48,16 @@ def run_pyarmor_gen():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # PyArmor 8.x 正确命令格式
+    # PyArmor 7.x 正确命令格式
+    # 命令: pyarmor obfuscate [选项] 入口文件
     cmd = [
-        sys.executable, "-m", "pyarmor",
-        "gen",
+        "pyarmor",
+        "obfuscate",  # PyArmor 7.x 使用 obfuscate 而非 gen
         "--output", str(output_dir),
+        "--restrict", "4",
         "--recursive",
-        "--enable-jit",
-        "--mix-str",
-        "--advanced", "4",  # 必须提供值 0-5
+        "--obf-code", "2",
+        "--obf-mod", "2",
     ]
     
     # 添加排除模式
@@ -90,6 +90,8 @@ def run_pyarmor_gen():
             
     except Exception as e:
         print(f"✗ 加密异常: {e}")
+        import traceback
+        print(traceback.format_exc())
         return False
 
 
@@ -118,19 +120,19 @@ def main():
     print("昆仑渗透测试平台 - PyArmor加密")
     print("=" * 60)
     
-    # 检查 PyArmor 版本
+    # 检查 PyArmor 版本（使用命令行方式，兼容 7.x）
     result = subprocess.run(
-        [sys.executable, "-m", "pyarmor", "--version"],
+        ["pyarmor", "--version"],
         capture_output=True, text=True
     )
     if result.returncode == 0:
         print(f"PyArmor版本: {result.stdout.strip()}")
     else:
-        print("安装 PyArmor...")
-        subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor"], check=True)
+        print("安装 PyArmor 7.x...")
+        subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor==7.7.4"], check=True)
     
     # 执行加密
-    if run_pyarmor_gen():
+    if run_pyarmor_obfuscate():
         copy_data_files()
         print("\n✓ 加密完成！输出目录: dist_encrypted")
     else:
