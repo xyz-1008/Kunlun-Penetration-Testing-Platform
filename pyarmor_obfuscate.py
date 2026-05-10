@@ -271,22 +271,23 @@ def run_pyarmor_batch(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # PyArmor 8.x command syntax
+    # PyArmor 7.x command syntax
     cmd = [
         sys.executable, "-m", "pyarmor",
         "gen",
         "--output", str(output_dir),
         "--restrict", "4",
         "--recursive",
-        "--enable-jit",
+        "--obf-code", "2",
+        "--obf-mod", "2",
     ]
     
-    # PyArmor 8.x uses different flags
+    # PyArmor 7.x flags
     if advanced:
-        cmd.append("--private")
+        cmd.append("--advanced")
     
     if string_encrypt:
-        cmd.append("--assert-call")
+        cmd.append("--enable-str-crypto")
     
     # Add exclude patterns
     for pattern in EXCLUDE_PATTERNS:
