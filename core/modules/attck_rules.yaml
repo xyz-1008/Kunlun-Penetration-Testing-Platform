@@ -1,0 +1,477 @@
+# ATT&CK Custom Mapping Rules for Kunlun Penetration Testing Platform
+# 自定义映射规则配置文件
+# 
+# 规则格式说明:
+# - rule_id: 规则唯一标识符
+# - name: 规则名称
+# - description: 规则描述
+# - operation_types: 匹配的操作类型列表
+# - keywords: 匹配的关键字列表（不区分大小写）
+# - regex_pattern: 正则表达式匹配模式
+# - attck_technique_id: 对应的ATT&CK技术ID
+# - confidence: 置信度 (exact/high/medium/low/fuzzy)
+# - priority: 优先级（数字越大优先级越高，自定义规则建议>150）
+# - enabled: 是否启用
+#
+# 匹配逻辑:
+# 1. 操作类型匹配: operation_type 必须在 operation_types 列表中
+# 2. 关键字匹配: 操作描述包含任意关键字即匹配
+# 3. 正则匹配: 操作描述匹配正则表达式
+# 4. 满足任一条件即触发映射
+
+rules:
+  # ==================== 初始访问 (Initial Access) ====================
+  - rule_id: "custom-001"
+    name: "SQL Injection Exploit"
+    description: "SQL注入漏洞利用映射到T1190"
+    operation_types:
+      - "sqli"
+      - "sql_injection"
+      - "poc_execute"
+    keywords:
+      - "sql injection"
+      - "sqli"
+      - "union select"
+      - "sqlmap"
+      - "SQL注入"
+    regex_pattern: "(?i)(union\\s+select|sqlmap|sql\\s*injection)"
+    attck_technique_id: "T1190"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-002"
+    name: "Phishing Email"
+    description: "钓鱼邮件攻击映射到T1566"
+    operation_types:
+      - "phishing"
+      - "email_attack"
+    keywords:
+      - "phishing"
+      - "spear phishing"
+      - "钓鱼"
+      - "恶意附件"
+      - "恶意链接"
+    attck_technique_id: "T1566"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-003"
+    name: "External Remote Services"
+    description: "外部远程服务利用映射到T1133"
+    operation_types:
+      - "remote_service"
+      - "vpn_exploit"
+    keywords:
+      - "vpn"
+      - "citrix"
+      - "external remote"
+      - "远程服务"
+      - "8080"
+      - "443"
+    attck_technique_id: "T1133"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  # ==================== 执行 (Execution) ====================
+  - rule_id: "custom-004"
+    name: "Command Line Execution"
+    description: "命令行执行映射到T1059.003"
+    operation_types:
+      - "cmd_exec"
+      - "shell"
+    keywords:
+      - "cmd.exe"
+      - "command prompt"
+      - "命令行"
+      - "/c"
+    attck_technique_id: "T1059.003"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-005"
+    name: "Python Script Execution"
+    description: "Python脚本执行映射到T1059.006"
+    operation_types:
+      - "python_exec"
+      - "script"
+    keywords:
+      - "python"
+      - ".py"
+      - "python脚本"
+    attck_technique_id: "T1059.006"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-006"
+    name: "Bash Script Execution"
+    description: "Bash脚本执行映射到T1059.004"
+    operation_types:
+      - "bash_exec"
+      - "shell_script"
+    keywords:
+      - "bash"
+      - ".sh"
+      - "shell脚本"
+    attck_technique_id: "T1059.004"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 持久化 (Persistence) ====================
+  - rule_id: "custom-007"
+    name: "Startup Folder Persistence"
+    description: "启动文件夹持久化映射到T1547.001"
+    operation_types:
+      - "startup_persist"
+      - "startup_folder"
+    keywords:
+      - "startup"
+      - "启动文件夹"
+      - "AppData\\Roaming\\Microsoft\\Windows\\Start Menu"
+    attck_technique_id: "T1547.001"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-008"
+    name: "Cron Job Persistence"
+    description: "Cron任务持久化映射到T1053.003"
+    operation_types:
+      - "cron_persist"
+      - "crontab"
+    keywords:
+      - "cron"
+      - "crontab"
+      - "定时任务"
+    attck_technique_id: "T1053.003"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 提权 (Privilege Escalation) ====================
+  - rule_id: "custom-009"
+    name: "Kernel Exploit Privesc"
+    description: "内核漏洞提权映射到T1068"
+    operation_types:
+      - "kernel_exploit"
+      - "privesc_exploit"
+    keywords:
+      - "kernel"
+      - "内核"
+      - "CVE-2021"
+      - "Dirty Pipe"
+      - "PrintNightmare"
+    regex_pattern: "(?i)(kernel|CVE-202[0-9]|dirty.?pipe|print.?nightmare)"
+    attck_technique_id: "T1068"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-010"
+    name: "DLL Hijacking"
+    description: "DLL劫持提权映射到T1574.001"
+    operation_types:
+      - "dll_hijack"
+      - "dll_load"
+    keywords:
+      - "dll hijack"
+      - "dll劫持"
+      - "search order"
+    attck_technique_id: "T1574.001"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 防御规避 (Defense Evasion) ====================
+  - rule_id: "custom-011"
+    name: "Disable Antivirus"
+    description: "禁用杀毒软件映射到T1562.001"
+    operation_types:
+      - "disable_av"
+      - "disable_defender"
+    keywords:
+      - "disable defender"
+      - "Set-MpPreference"
+      - "DisableRealtimeMonitoring"
+      - "禁用defender"
+      - "关闭杀毒"
+    attck_technique_id: "T1562.001"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-012"
+    name: "Clear Event Logs"
+    description: "清除事件日志映射到T1070.001"
+    operation_types:
+      - "clear_logs"
+      - "log_clear"
+    keywords:
+      - "clear eventlog"
+      - "wevtutil"
+      - "清除日志"
+      - "eventvwr"
+    attck_technique_id: "T1070.001"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-013"
+    name: "Obfuscated Command"
+    description: "混淆命令映射到T1027"
+    operation_types:
+      - "obfuscated_cmd"
+      - "encoded_command"
+    keywords:
+      - "base64"
+      - "encodedcommand"
+      - "混淆"
+      - "obfuscat"
+    regex_pattern: "(?i)(base64|encodedcommand|obfuscat)"
+    attck_technique_id: "T1027"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  # ==================== 凭据访问 (Credential Access) ====================
+  - rule_id: "custom-014"
+    name: "SAM Database Extraction"
+    description: "SAM数据库提取映射到T1003.002"
+    operation_types:
+      - "sam_dump"
+      - "credential_dump"
+    keywords:
+      - "sam"
+      - "SAM database"
+      - "secretsdump"
+      - "reg save"
+    attck_technique_id: "T1003.002"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-015"
+    name: "Browser Credential Theft"
+    description: "浏览器凭据窃取映射到T1555.003"
+    operation_types:
+      - "browser_creds"
+      - "password_steal"
+    keywords:
+      - "browser"
+      - "chrome"
+      - "firefox"
+      - "credential"
+      - "密码"
+      - "浏览器"
+    attck_technique_id: "T1555.003"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  - rule_id: "custom-016"
+    name: "Silver Ticket"
+    description: "白银票据映射到T1558.002"
+    operation_types:
+      - "silver_ticket"
+    keywords:
+      - "silver ticket"
+      - "白银票据"
+      - "service ticket"
+    attck_technique_id: "T1558.002"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 发现 (Discovery) ====================
+  - rule_id: "custom-017"
+    name: "Network Scanning"
+    description: "网络扫描映射到T1046"
+    operation_types:
+      - "network_scan"
+      - "port_scan"
+      - "nmap"
+    keywords:
+      - "nmap"
+      - "port scan"
+      - "网络扫描"
+      - "端口扫描"
+      - "masscan"
+    attck_technique_id: "T1046"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-018"
+    name: "System Information Discovery"
+    description: "系统信息发现映射到T1082"
+    operation_types:
+      - "sysinfo"
+      - "system_info"
+    keywords:
+      - "systeminfo"
+      - "hostname"
+      - "whoami"
+      - "系统信息"
+      - "ipconfig"
+    attck_technique_id: "T1082"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-019"
+    name: "Account Discovery"
+    description: "账户发现映射到T1087"
+    operation_types:
+      - "account_enum"
+      - "user_enum"
+    keywords:
+      - "net user"
+      - "whoami"
+      - "账户发现"
+      - "domain admins"
+      - "group"
+    attck_technique_id: "T1087"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 横向移动 (Lateral Movement) ====================
+  - rule_id: "custom-020"
+    name: "SSH Lateral Movement"
+    description: "SSH横向移动映射到T1021.004"
+    operation_types:
+      - "ssh"
+      - "ssh_lateral"
+    keywords:
+      - "ssh"
+      - "22"
+      - "ssh连接"
+    attck_technique_id: "T1021.004"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-021"
+    name: "Pass the Ticket"
+    description: "票据传递映射到T1550.003"
+    operation_types:
+      - "ptt"
+      - "pass_the_ticket"
+    keywords:
+      - "pass the ticket"
+      - "ptt"
+      - "票据传递"
+      - "kirbi"
+    attck_technique_id: "T1550.003"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  # ==================== 命令与控制 (Command and Control) ====================
+  - rule_id: "custom-022"
+    name: "Web C2 Channel"
+    description: "Web C2通道映射到T1071.001"
+    operation_types:
+      - "c2_web"
+      - "http_c2"
+    keywords:
+      - "http"
+      - "https"
+      - "web c2"
+      - "cobalt strike"
+      - "beacon"
+    attck_technique_id: "T1071.001"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  - rule_id: "custom-023"
+    name: "DNS Tunneling"
+    description: "DNS隧道映射到T1071.004"
+    operation_types:
+      - "dns_tunnel"
+      - "dns_c2"
+    keywords:
+      - "dns"
+      - "tunnel"
+      - "隧道"
+      - "dnscat"
+    attck_technique_id: "T1071.004"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-024"
+    name: "Encrypted Channel"
+    description: "加密信道映射到T1573"
+    operation_types:
+      - "encrypted_c2"
+      - "ssl_c2"
+    keywords:
+      - "ssl"
+      - "tls"
+      - "encrypted"
+      - "加密"
+      - "https"
+    attck_technique_id: "T1573"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  # ==================== 数据渗出 (Exfiltration) ====================
+  - rule_id: "custom-025"
+    name: "Exfiltration Over Web Service"
+    description: "通过Web服务渗出映射到T1567"
+    operation_types:
+      - "web_exfil"
+      - "cloud_exfil"
+    keywords:
+      - "exfiltration"
+      - "upload"
+      - "渗出"
+      - "github"
+      - "pastebin"
+    attck_technique_id: "T1567"
+    confidence: "high"
+    priority: 180
+    enabled: true
+
+  # ==================== 影响 (Impact) ====================
+  - rule_id: "custom-026"
+    name: "Resource Hijacking"
+    description: "资源劫持（挖矿）映射到T1496"
+    operation_types:
+      - "crypto_mining"
+      - "resource_hijack"
+    keywords:
+      - "mining"
+      - "xmrig"
+      - "挖矿"
+      - "cryptocurrency"
+    attck_technique_id: "T1496"
+    confidence: "exact"
+    priority: 200
+    enabled: true
+
+  - rule_id: "custom-027"
+    name: "Endpoint Denial of Service"
+    description: "端点拒绝服务映射到T1499"
+    operation_types:
+      - "dos"
+      - "ddos"
+      - "flood"
+    keywords:
+      - "denial of service"
+      - "dos"
+      - "ddos"
+      - "flood"
+      - "拒绝服务"
+    attck_technique_id: "T1499"
+    confidence: "exact"
+    priority: 200
+    enabled: true

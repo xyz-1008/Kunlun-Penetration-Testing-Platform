@@ -1,0 +1,163 @@
+# Kunlun Distributed Scan Cluster Configuration
+# 昆仑分布式扫描集群默认配置文件
+
+# Master node configuration
+master:
+  # Master node identifier
+  node_id: "master"
+  # Bind host address
+  host: "0.0.0.0"
+  # Bind port
+  port: 8765
+  # Pre-shared key for authentication (change in production)
+  psk: "kunlun-cluster-psk-change-me"
+  # State persistence path
+  storage_path: "./data/cluster_master"
+  # Task allocation strategy: round_robin, least_load, weighted
+  allocation_strategy: "least_load"
+  # Number of targets per shard
+  shard_size: 100
+  # Heartbeat timeout in seconds
+  heartbeat_timeout: 30
+  # Maximum consecutive failures before blacklisting
+  max_failure_count: 5
+
+# Worker node default configuration
+worker_defaults:
+  # Heartbeat interval in seconds
+  heartbeat_interval: 30
+  # Maximum concurrent tasks per worker
+  max_concurrent_tasks: 5
+  # Result batch size for reporting
+  result_batch_size: 100
+  # Retry count for failed operations
+  retry_count: 3
+  # Maximum CPU usage percentage before throttling
+  max_cpu_percent: 80.0
+  # Maximum memory usage percentage before throttling
+  max_memory_percent: 80.0
+  # Maximum disk usage percentage before pausing
+  max_disk_percent: 90.0
+  # Default supported modules
+  supported_modules:
+    - "port_scan"
+    - "service_detection"
+    - "vulnerability_scan"
+    - "poc_verify"
+    - "asset_discovery"
+
+# TLS/SSL configuration
+tls:
+  # Enable TLS encryption
+  enabled: true
+  # CA certificate path
+  ca_cert_path: "./data/cluster/ca_cert.pem"
+  # CA private key path
+  ca_key_path: "./data/cluster/ca_key.pem"
+  # Certificate validity in days
+  cert_validity_days: 365
+
+# Token management configuration
+tokens:
+  # Token lifetime in seconds (24 hours)
+  lifetime: 86400
+  # Enable automatic token rotation
+  auto_rotate: true
+  # Rotation interval in seconds
+  rotation_interval: 86400
+
+# Cluster scaling configuration
+scaling:
+  # Maximum number of workers
+  max_workers: 100
+  # Enable auto-scaling (future feature)
+  auto_scaling: false
+  # Scale up threshold (tasks per worker)
+  scale_up_threshold: 10
+  # Scale down threshold (tasks per worker)
+  scale_down_threshold: 2
+
+# Result retention configuration
+retention:
+  # Days to retain full results
+  result_retention_days: 30
+  # Days to retain task metadata
+  task_metadata_retention_days: 90
+  # Retention mode: full, vulnerabilities_only, periodic_cleanup
+  retention_mode: "full"
+  # Cleanup schedule (cron expression)
+  cleanup_schedule: "0 2 * * *"
+
+# Communication configuration
+communication:
+  # Communication protocol: websocket, grpc
+  protocol: "websocket"
+  # Connection timeout in seconds
+  connection_timeout: 30
+  # Message size limit in bytes
+  max_message_size: 10485760  # 10MB
+  # Enable message compression
+  compression: true
+  # Reconnect attempts
+  reconnect_attempts: 5
+  # Reconnect delay in seconds
+  reconnect_delay: 5
+
+# Logging configuration
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: "INFO"
+  # Log file path
+  log_file: "./logs/cluster.log"
+  # Maximum log file size in MB
+  max_log_size: 100
+  # Number of log files to keep
+  backup_count: 5
+  # Log format
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Integration configuration
+integration:
+  # Asset discovery integration
+  asset_discovery:
+    enabled: true
+    # Auto-associate same-subnet assets
+    auto_subnet_association: true
+    # Asset deduplication mode: strict, relaxed
+    dedup_mode: "strict"
+  # Vulnerability scanning integration
+  vulnerability_scan:
+    enabled: true
+    # PoC verification parallel execution
+    parallel_poc_verify: true
+    # Vulnerability deduplication
+    dedup_vulnerabilities: true
+  # Passive scanning integration
+  passive_scan:
+    enabled: true
+    # Traffic buffer size
+    traffic_buffer_size: 10000
+    # Auto-sync rules to workers
+    auto_sync_rules: true
+    # Rule sync interval in seconds
+    rule_sync_interval: 300
+  # Report integration
+  report:
+    enabled: true
+    # Auto-generate report on task completion
+    auto_generate: false
+    # Report format: json, html, pdf
+    default_format: "json"
+
+# Performance tuning
+performance:
+  # Task dispatch interval in seconds
+  task_dispatch_interval: 1
+  # Dashboard update interval in seconds
+  dashboard_update_interval: 5
+  # Result aggregation delay in seconds
+  result_aggregation_delay: 5
+  # Enable result streaming
+  result_streaming: true
+  # Maximum results in memory
+  max_results_in_memory: 100000

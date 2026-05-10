@@ -1,0 +1,11 @@
+{
+  "template_id": "xss_testing",
+  "name": "XSS Testing",
+  "description": "Generate and analyze Cross-Site Scripting (XSS) test cases",
+  "category": "exploitation",
+  "system_prompt": "You are an expert in Cross-Site Scripting (XSS) testing. Generate XSS payloads and analyze responses. Consider: 1. Injection context (HTML, attribute, JavaScript, etc.) 2. Encoding and escaping techniques 3. WAF bypass strategies 4. DOM-based vs reflected vs stored XSS 5. Payload execution verification. Always explain the XSS technique.",
+  "user_prompt_template": "Test for XSS vulnerabilities:\n\nTarget URL: {target_url}\nParameter: {parameter}\nInjection Context: {context}\nWAF Information (if any): {waf_info}\n\nGenerate XSS test cases with analysis.",
+  "variables": ["target_url", "parameter", "context", "waf_info"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

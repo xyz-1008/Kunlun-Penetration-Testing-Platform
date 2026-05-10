@@ -1,0 +1,359 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (例如: v1.0.0)'
+        required: true
+        type: string
+
+env:
+  PYTHON_VERSION: '3.10'
+  PROJECT_NAME: "KunLun_PenTest"
+
+jobs:
+  # ==================== Windows 构建 ====================
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller pyarmor
+      
+      - name: PyArmor encryption
+        run: |
+          python pyarmor_obfuscate.py --advanced --output dist_encrypted
+        shell: pwsh
+      
+      - name: Build with PyInstaller
+        run: |
+          # 复制加密后的文件到工作目录
+          Copy-Item -Path "dist_encrypted\*" -Destination "." -Recurse -Force
+          # 使用spec文件打包
+          pyinstaller --clean kunlun.spec
+        shell: pwsh
+      
+      - name: Create version file
+        run: |
+          $VERSION = "${{ github.ref_name }}" -replace 'v', ''
+          if (-not $VERSION) { $VERSION = "${{ github.event.inputs.version }}" -replace 'v', '' }
+          Write-Output "VERSION=$VERSION" > version.txt
+          Write-Output "BUILD_DATE=$(Get-Date -Format 'yyyy-MM-dd')" >> version.txt
+          Write-Output "COMMIT_SHA=${{ github.sha }}" >> version.txt
+          Write-Output "BUILD_NUMBER=${{ github.run_number }}" >> version.txt
+        shell: pwsh
+      
+      - name: Package Windows artifact
+        run: |
+          $VERSION = "${{ github.ref_name }}" -replace 'v', ''
+          if (-not $VERSION) { $VERSION = "${{ github.event.inputs.version }}" -replace 'v', '' }
+          $ARTIFACT_NAME = "${{ env.PROJECT_NAME }}-${{ runner.os }}-x64-v$VERSION"
+          New-Item -ItemType Directory -Path "release" -Force
+          Copy-Item -Path "dist\${{ env.PROJECT_NAME }}\*" -Destination "release\" -Recurse -Force
+          Copy-Item -Path "version.txt" -Destination "release\"
+          Compress-Archive -Path "release\*" -DestinationPath "${ARTIFACT_NAME}.zip" -Force
+          Write-Output "ARTIFACT_NAME=${ARTIFACT_NAME}.zip" >> $env:GITHUB_ENV
+        shell: pwsh
+      
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.zip
+          retention-days: 5
+      
+      - name: Calculate SHA256
+        run: |
+          $HASH = Get-FileHash -Path "${{ env.ARTIFACT_NAME }}" -Algorithm SHA256
+          Write-Output "SHA256=${$HASH.Hash}" >> $env:GITHUB_ENV
+        shell: pwsh
+
+  # ==================== Linux 构建 ====================
+  build-linux:
+    name: Build Linux x64
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            libssl-dev \
+            libffi-dev \
+            python3-dev \
+            libxcb-xinerama0 \
+            libxcb-cursor0 \
+            libxcb1 \
+            libx11-xcb1 \
+            libgl1-mesa-glx \
+            libglib2.0-0 \
+            libcap2-bin \
+            appstream \
+            fuse
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller pyarmor
+      
+      - name: PyArmor encryption
+        run: |
+          python pyarmor_obfuscate.py --advanced --output dist_encrypted
+      
+      - name: Build with PyInstaller
+        run: |
+          # 复制加密后的文件到工作目录
+          cp -r dist_encrypted/* .
+          # 使用spec文件打包
+          pyinstaller --clean kunlun.spec
+      
+      - name: Create version file
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${VERSION#v}"
+          fi
+          cat > version.txt << EOF
+          VERSION=$VERSION
+          BUILD_DATE=$(date +%Y-%m-%d)
+          COMMIT_SHA=${{ github.sha }}
+          BUILD_NUMBER=${{ github.run_number }}
+          EOF
+      
+      - name: Package Linux artifact
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${VERSION#v}"
+          fi
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-Linux-x64-v${VERSION}"
+          mkdir -p release
+          cp -r dist/${{ env.PROJECT_NAME }}/* release/
+          cp version.txt release/
+          chmod +x release/${{ env.PROJECT_NAME }}
+          tar -czf "${ARTIFACT_NAME}.tar.gz" -C release .
+          echo "ARTIFACT_NAME=${ARTIFACT_NAME}.tar.gz" >> $GITHUB_ENV
+      
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.tar.gz
+          retention-days: 5
+      
+      - name: Calculate SHA256
+        run: |
+          HASH=$(sha256sum "${{ env.ARTIFACT_NAME }}" | awk '{print $1}')
+          echo "SHA256=${HASH}" >> $GITHUB_ENV
+
+  # ==================== macOS 构建 ====================
+  build-macos:
+    name: Build macOS x64
+    runs-on: macos-12
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller pyarmor
+      
+      - name: PyArmor encryption
+        run: |
+          python pyarmor_obfuscate.py --advanced --output dist_encrypted
+      
+      - name: Build with PyInstaller
+        run: |
+          # 复制加密后的文件到工作目录
+          cp -r dist_encrypted/* .
+          # 使用spec文件打包
+          pyinstaller --clean kunlun.spec
+      
+      - name: Create version file
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${VERSION#v}"
+          fi
+          cat > version.txt << EOF
+          VERSION=$VERSION
+          BUILD_DATE=$(date +%Y-%m-%d)
+          COMMIT_SHA=${{ github.sha }}
+          BUILD_NUMBER=${{ github.run_number }}
+          EOF
+      
+      - name: Create DMG
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${VERSION#v}"
+          fi
+          ARTIFACT_NAME="${{ env.PROJECT_NAME }}-macOS-x64-v${VERSION}"
+          
+          # 创建DMG
+          mkdir -p dmg
+          cp -r dist/${{ env.PROJECT_NAME }}.app dmg/
+          cp version.txt dmg/
+          
+          # 创建符号链接到Applications
+          ln -s /Applications dmg/Applications
+          
+          # 创建DMG文件
+          hdiutil create -volname "${{ env.PROJECT_NAME }}" \
+            -srcfolder dmg \
+            -ov -format UDZO \
+            "${ARTIFACT_NAME}.dmg"
+          
+          echo "ARTIFACT_NAME=${ARTIFACT_NAME}.dmg" >> $GITHUB_ENV
+      
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.dmg
+          retention-days: 5
+      
+      - name: Calculate SHA256
+        run: |
+          HASH=$(shasum -a 256 "${{ env.ARTIFACT_NAME }}" | awk '{print $1}')
+          echo "SHA256=${HASH}" >> $GITHUB_ENV
+
+  # ==================== 发布到 GitHub Release ====================
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      
+      - name: Generate release notes
+        run: |
+          # 提取版本号
+          VERSION="${{ github.ref_name }}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          
+          # 生成Release描述
+          cat > release_notes.md << EOF
+          # ${{ env.PROJECT_NAME }} ${VERSION}
+          
+          ## 更新日志
+          
+          $(if [ -f CHANGELOG.md ]; then
+            # 提取当前版本的变更日志
+            awk "/^## \[${VERSION#v}\]/,/^## \[/" CHANGELOG.md | head -n -1
+          else
+            echo "暂无更新日志"
+          fi)
+          
+          ## 安装包
+          
+          | 平台 | 文件 | SHA256 |
+          |------|------|--------|
+          | Windows x64 | $(ls artifacts/*Windows*.zip) | $(sha256sum artifacts/*Windows*.zip | awk '{print $1}') |
+          | Linux x64 | $(ls artifacts/*Linux*.tar.gz) | $(sha256sum artifacts/*Linux*.tar.gz | awk '{print $1}') |
+          | macOS x64 | $(ls artifacts/*macOS*.dmg) | $(sha256sum artifacts/*macOS*.dmg | awk '{print $1}') |
+          
+          ## 安装说明
+          
+          ### Windows
+          1. 下载 Windows x64 安装包
+          2. 解压到任意目录
+          3. 双击运行 KunLun_PenTest.exe
+          4. 首次运行需要管理员权限（UAC提示）
+          
+          ### Linux
+          1. 下载 Linux x64 安装包
+          2. 解压: tar -xzf KunLun_PenTest-Linux-x64-*.tar.gz
+          3. 添加执行权限: chmod +x KunLun_PenTest
+          4. 运行: ./KunLun_PenTest
+          
+          ### macOS
+          1. 下载 macOS x64 安装包
+          2. 双击打开 DMG 文件
+          3. 将应用拖拽到 Applications 文件夹
+          4. 首次运行需要在"系统偏好设置 > 安全性与隐私"中允许运行
+          
+          ## 系统要求
+          
+          - **Windows**: Windows 10/11 (x64)
+          - **Linux**: Ubuntu 20.04+ / Debian 11+ / CentOS 7+ (x64)
+          - **macOS**: macOS 11+ (x64)
+          
+          ## 注意事项
+          
+          - MITM代理、反连平台、端口扫描等功能需要管理员/root权限
+          - 首次运行会自动生成CA证书，请妥善保管
+          - 插件和模板文件可在程序运行目录下自定义覆盖
+          EOF
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name || github.event.inputs.version }}
+          name: "${{ env.PROJECT_NAME }} ${{ github.ref_name || github.event.inputs.version }}"
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/*Windows*.zip
+            artifacts/*Linux*.tar.gz
+            artifacts/*macOS*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,108 @@
+# OAuth Redirect URI - Subdomain Takeover Attack Dictionary
+# 子域名接管攻击模式 - 利用已接管的子域名进行OAuth劫持
+# 用于测试目标是否正确验证redirect_uri的子域名
+
+# 常见可接管子域名
+https://dev.target.com/callback
+https://staging.target.com/callback
+https://test.target.com/callback
+https://qa.target.com/callback
+https://uat.target.com/callback
+https://beta.target.com/callback
+https://demo.target.com/callback
+https://api.target.com/callback
+https://cdn.target.com/callback
+https://static.target.com/callback
+https://assets.target.com/callback
+https://media.target.com/callback
+https://img.target.com/callback
+https://docs.target.com/callback
+https://help.target.com/callback
+https://support.target.com/callback
+https://blog.target.com/callback
+https://status.target.com/callback
+https://monitor.target.com/callback
+https://admin.target.com/callback
+
+# 云服务相关子域名（常见接管目标）
+https://s3.target.com/callback
+https://storage.target.com/callback
+https://bucket.target.com/callback
+https://azure.target.com/callback
+https://gcp.target.com/callback
+https://cloud.target.com/callback
+https://heroku.target.com/callback
+https://netlify.target.com/callback
+https://vercel.target.com/callback
+https://github.target.com/callback
+https://gitlab.target.com/callback
+https://bitbucket.target.com/callback
+
+# 旧版/废弃子域名
+https://old.target.com/callback
+https://legacy.target.com/callback
+https://v1.target.com/callback
+https://v2.target.com/callback
+https://archive.target.com/callback
+https://backup.target.com/callback
+https://www2.target.com/callback
+https://www3.target.com/callback
+
+# 第三方集成子域名
+https://shopify.target.com/callback
+https://wordpress.target.com/callback
+https://jira.target.com/callback
+https://confluence.target.com/callback
+https://slack.target.com/callback
+https://teams.target.com/callback
+https://zoom.target.com/callback
+https://meet.target.com/callback
+
+# 开发环境子域名
+https://localhost.target.com/callback
+https://127.0.0.1.target.com/callback
+https://dev-env.target.com/callback
+https://local.target.com/callback
+https://internal.target.com/callback
+https://intranet.target.com/callback
+
+# 通配符DNS相关
+https://*.target.com/callback
+https://random123.target.com/callback
+https://abc123.target.com/callback
+https://xyz789.target.com/callback
+https://test123.target.com/callback
+
+# 带端口的子域名
+https://dev.target.com:8080/callback
+https://staging.target.com:3000/callback
+https://test.target.com:8000/callback
+https://api.target.com:443/callback
+
+# 子域名+路径遍历组合
+https://dev.target.com/callback/../evil.com
+https://staging.target.com/callback/..%2fevil.com
+https://test.target.com/callback/../../evil.com
+
+# 子域名+开放重定向组合
+https://dev.target.com/redirect?url=https://evil.com
+https://staging.target.com/go?next=https://evil.com
+https://test.target.com/out?dest=https://evil.com
+
+# CNAME接管相关
+https://target.herokuapp.com/callback
+https://target.netlify.app/callback
+https://target.vercel.app/callback
+https://target.github.io/callback
+https://target.gitlab.io/callback
+https://target.pages.dev/callback
+https://target.fly.dev/callback
+https://target.onrender.com/callback
+
+# 多租户子域名
+https://tenant1.target.com/callback
+https://tenant2.target.com/callback
+https://org1.target.com/callback
+https://org2.target.com/callback
+https://company1.target.com/callback
+https://company2.target.com/callback

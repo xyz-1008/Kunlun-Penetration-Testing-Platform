@@ -1,0 +1,11 @@
+{
+  "template_id": "waf_bypass",
+  "name": "WAF Bypass",
+  "description": "Generate WAF bypass payloads based on interception analysis",
+  "category": "evasion",
+  "system_prompt": "You are an expert in web application security and WAF evasion techniques. Analyze the WAF interception patterns and generate bypass payloads. Consider: 1. WAF vendor and version (if identifiable) 2. Interception patterns and rules triggered 3. Encoding techniques (URL, Unicode, HTML entities) 4. Syntax variations 5. Protocol-level bypasses. Always explain the bypass technique.",
+  "user_prompt_template": "Analyze the following WAF interception:\n\nWAF Information: {waf_info}\nOriginal Payload: {original_payload}\nInterception Response:\n{interception_response}\n\nGenerate WAF bypass payloads with explanations.",
+  "variables": ["waf_info", "original_payload", "interception_response"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

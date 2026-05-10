@@ -1,0 +1,78 @@
+app:
+  auto_load_last: false
+  auto_update: true
+  check_updates_on_startup: true
+  language: zh_CN
+  name: '1'
+  show_welcome: true
+  theme: light
+  version: 1.0.0
+database:
+  auto_backup: true
+  backup_interval: 24
+  path: data/app.db
+modules:
+  egress_builder:
+    enabled: true
+    require_auth: true
+  knowledge_base:
+    auto_update: true
+    enabled: true
+  poc_manager:
+    auto_sync: true
+    enabled: true
+  sqli_tester:
+    enabled: true
+    safe_mode: true
+network:
+  connect_timeout: 10
+  max_connections: 100
+  max_retries: 3
+  max_threads: 10
+  rate_limit: 0
+  read_timeout: 30
+proxy:
+  auth_enabled: false
+  host: 127.0.0.1
+  intercept_enabled: false
+  intercept_patterns: ''
+  mode: no_proxy
+  port: 8080
+  type: HTTP
+  username: ''
+scanner:
+  active_scan: true
+  follow_redirects: true
+  max_depth: 5
+  max_pages: 1000
+  mode: standard
+  passive_scan: true
+  respect_robots: false
+  vuln_checks:
+    command_injection: true
+    csrf: true
+    file_inclusion: true
+    info_disclosure: true
+    ldap_injection: true
+    misconfiguration: true
+    path_traversal: true
+    sqli: true
+    ssrf: true
+    weak_password: true
+    xml_injection: true
+    xss: true
+security:
+  audit_log_enabled: true
+  audit_log_path: logs/audit.log
+  auto_lock_enabled: false
+  auto_lock_timeout: 300
+  encryption_enabled: true
+  max_payload_size: 10000
+  require_password: false
+  safe_mode: false
+ui:
+  font_size: 10
+  maximized: true
+  recent_files_limit: 10
+  window_height: 1009
+  window_width: 1920

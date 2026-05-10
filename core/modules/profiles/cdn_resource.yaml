@@ -1,0 +1,48 @@
+# CDN Resource Request Simulation Profile
+# Simulates CDN static resource requests
+#
+# Usage: Load this profile to make Beacon traffic appear as requests for
+# JavaScript/CSS resources from a CDN endpoint.
+
+name: cdn_resource
+version: "1.0.0"
+author: "Kunlun Security Lab"
+description: "Simulates CDN resource requests with GET /assets/{{random_string}}.js pattern"
+protocols:
+  - https
+
+http:
+  http_method: GET
+  http_uri: "/assets/{{random_string}}.js?v={{timestamp}}"
+  user_agent:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+    - "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0"
+  headers:
+    Accept: "*/*"
+    Accept-Encoding: "gzip, deflate, br"
+    Accept-Language: "en-US,en;q=0.9"
+    Cache-Control: "max-age=31536000"
+    If-None-Match: '"{{random_hex}}"'
+    If-Modified-Since: "Mon, 01 Jan 2024 00:00:00 GMT"
+    Origin: "https://{{hostname}}"
+    Referer: "https://{{hostname}}/app"
+    Sec-Fetch-Dest: "script"
+    Sec-Fetch-Mode: "no-cors"
+    Sec-Fetch-Site: "cross-site"
+  cookie: "__cf_bm={{random_string}}; cf_clearance={{random_string}}"
+  body_format: plain
+  body_template: ""
+
+heartbeat:
+  sleep_time: 90
+  jitter: 40
+  max_retry: 6
+  work_hours_start: 7
+  work_hours_end: 22
+  work_hours_multiplier: 0.5
+
+encryption:
+  encryption: aes-256-cbc
+  encoding: base64
+  key: ""

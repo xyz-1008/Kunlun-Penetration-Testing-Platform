@@ -1,0 +1,19 @@
+{
+  "range_id": "upload_labs",
+  "name": "Upload-Labs",
+  "description": "A file upload vulnerability practice platform covering various bypass techniques.",
+  "difficulty": "intermediate",
+  "vulnerability_types": ["file_upload"],
+  "estimated_time_minutes": 90,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 256,
+  "docker_image": "c0ny1/upload-labs:latest",
+  "docker_compose_file": "",
+  "default_port": 80,
+  "default_credentials": [],
+  "tags": ["php", "file-upload", "bypass"],
+  "author": "c0ny1",
+  "version": "1.0",
+  "is_official": true,
+  "community_rating": 4.6
+}

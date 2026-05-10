@@ -1,0 +1,19 @@
+{
+  "range_id": "juice_shop",
+  "name": "OWASP Juice Shop",
+  "description": "The most modern and complex insecure web application, including a REST API, JWT authentication, and a modern Angular frontend. Covers modern web vulnerabilities.",
+  "difficulty": "intermediate",
+  "vulnerability_types": ["sql_injection", "xss", "csrf", "jwt_weakness", "api_security", "business_logic", "idor"],
+  "estimated_time_minutes": 240,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 512,
+  "docker_image": "bkimminich/juice-shop:latest",
+  "docker_compose_file": "",
+  "default_port": 3000,
+  "default_credentials": [],
+  "tags": ["nodejs", "angular", "modern", "jwt", "api"],
+  "author": "OWASP",
+  "version": "16.0",
+  "is_official": true,
+  "community_rating": 4.9
+}

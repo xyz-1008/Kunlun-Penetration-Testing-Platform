@@ -1,0 +1,19 @@
+{
+  "range_id": "portswigger_web_security",
+  "name": "PortSwigger Web Security Academy (Local Mirror)",
+  "description": "Local mirror of PortSwigger's Web Security Academy labs. Covers all major web vulnerability types with high-quality exercises.",
+  "difficulty": "advanced",
+  "vulnerability_types": ["sql_injection", "xss", "csrf", "ssrf", "xxe", "deserialization", "auth_bypass", "api_security"],
+  "estimated_time_minutes": 600,
+  "required_cpu_cores": 2,
+  "required_memory_mb": 1024,
+  "docker_image": "portswigger/web-security-academy:latest",
+  "docker_compose_file": "",
+  "default_port": 8080,
+  "default_credentials": [],
+  "tags": ["java", "comprehensive", "advanced", "portswigger"],
+  "author": "PortSwigger",
+  "version": "2024.1",
+  "is_official": true,
+  "community_rating": 5.0
+}

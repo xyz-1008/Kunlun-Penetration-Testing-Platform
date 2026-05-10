@@ -1,0 +1,811 @@
+secret
+password
+key
+jwt_secret
+token_secret
+api_secret
+app_secret
+auth_secret
+session_secret
+cookie_secret
+hmac_secret
+signing_secret
+verification_secret
+your-256-bit-secret
+your-384-bit-secret
+your-512-bit-secret
+my_secret
+super_secret
+top_secret
+private_key
+public_key
+master_key
+default_key
+test_key
+dev_key
+prod_key
+staging_key
+secret_key
+my_secret_key
+jwt_secret_key
+token_secret_key
+api_secret_key
+app_secret_key
+auth_secret_key
+session_secret_key
+cookie_secret_key
+hmac_secret_key
+signing_secret_key
+verification_secret_key
+SECRET_KEY
+JWT_SECRET
+TOKEN_SECRET
+API_SECRET
+APP_SECRET
+AUTH_SECRET
+SESSION_SECRET
+COOKIE_SECRET
+HMAC_SECRET
+SIGNING_SECRET
+VERIFICATION_SECRET
+MY_SECRET_KEY
+JWT_SECRET_KEY
+TOKEN_SECRET_KEY
+API_SECRET_KEY
+APP_SECRET_KEY
+AUTH_SECRET_KEY
+SESSION_SECRET_KEY
+COOKIE_SECRET_KEY
+HMAC_SECRET_KEY
+SIGNING_SECRET_KEY
+VERIFICATION_SECRET_KEY
+secret-key
+jwt-secret
+token-secret
+api-secret
+app-secret
+auth-secret
+session-secret
+cookie-secret
+hmac-secret
+signing-secret
+verification-secret
+my-secret-key
+jwt-secret-key
+token-secret-key
+api-secret-key
+app-secret-key
+auth-secret-key
+session-secret-key
+cookie-secret-key
+hmac-secret-key
+signing-secret-key
+verification-secret-key
+SECRET-KEY
+JWT-SECRET
+TOKEN-SECRET
+API-SECRET
+APP-SECRET
+AUTH-SECRET
+SESSION-SECRET
+COOKIE-SECRET
+HMAC-SECRET
+SIGNING-SECRET
+VERIFICATION-SECRET
+MY-SECRET-KEY
+JWT-SECRET-KEY
+TOKEN-SECRET-KEY
+API-SECRET-KEY
+APP-SECRET-KEY
+AUTH-SECRET-KEY
+SESSION-SECRET-KEY
+COOKIE-SECRET-KEY
+HMAC-SECRET-KEY
+SIGNING-SECRET-KEY
+VERIFICATION-SECRET-KEY
+secret123
+jwt123
+token123
+api123
+app123
+auth123
+session123
+cookie123
+hmac123
+signing123
+verification123
+secret_123
+jwt_123
+token_123
+api_123
+app_123
+auth_123
+session_123
+cookie_123
+hmac_123
+signing_123
+verification_123
+SECRET123
+JWT123
+TOKEN123
+API123
+APP123
+AUTH123
+SESSION123
+COOKIE123
+HMAC123
+SIGNING123
+VERIFICATION123
+SECRET_123
+JWT_123
+TOKEN_123
+API_123
+APP_123
+AUTH_123
+SESSION_123
+COOKIE_123
+HMAC_123
+SIGNING_123
+VERIFICATION_123
+secret-123
+jwt-123
+token-123
+api-123
+app-123
+auth-123
+session-123
+cookie-123
+hmac-123
+signing-123
+verification-123
+SECRET-123
+JWT-123
+TOKEN-123
+API-123
+APP-123
+AUTH-123
+SESSION-123
+COOKIE-123
+HMAC-123
+SIGNING-123
+VERIFICATION-123
+secret2024
+jwt2024
+token2024
+api2024
+app2024
+auth2024
+session2024
+cookie2024
+hmac2024
+signing2024
+verification2024
+secret_2024
+jwt_2024
+token_2024
+api_2024
+app_2024
+auth_2024
+session_2024
+cookie_2024
+hmac_2024
+signing_2024
+verification_2024
+SECRET2024
+JWT2024
+TOKEN2024
+API2024
+APP2024
+AUTH2024
+SESSION2024
+COOKIE2024
+HMAC2024
+SIGNING2024
+VERIFICATION2024
+SECRET_2024
+JWT_2024
+TOKEN_2024
+API_2024
+APP_2024
+AUTH_2024
+SESSION_2024
+COOKIE_2024
+HMAC_2024
+SIGNING_2024
+VERIFICATION_2024
+secret-2024
+jwt-2024
+token-2024
+api-2024
+app-2024
+auth-2024
+session-2024
+cookie-2024
+hmac-2024
+signing-2024
+verification-2024
+SECRET-2024
+JWT-2024
+TOKEN-2024
+API-2024
+APP-2024
+AUTH-2024
+SESSION-2024
+COOKIE-2024
+HMAC-2024
+SIGNING-2024
+VERIFICATION-2024
+development
+production
+staging
+testing
+demo
+example
+sample
+temp
+temporary
+debug
+debugging
+internal
+external
+service
+microservice
+backend
+frontend
+api
+rest
+graphql
+oauth
+openid
+sso
+saml
+ldap
+kerberos
+jwt
+auth
+authentication
+authorization
+bearer
+session
+cookie
+login
+user
+root
+admin
+master
+qwerty
+letmein
+welcome
+monkey
+dragon
+baseball
+football
+shadow
+sunshine
+trustno1
+iloveyou
+batman
+access
+hello
+charlie
+donald
+changeme
+default
+test
+testing
+dev
+prod
+stage
+uat
+qa
+ci
+cd
+pipeline
+build
+deploy
+release
+version
+update
+upgrade
+patch
+fix
+bug
+error
+warning
+info
+log
+trace
+debug
+verbose
+silent
+quiet
+loud
+noisy
+chatty
+talkative
+communicative
+expressive
+eloquent
+articulate
+fluent
+smooth
+clear
+precise
+accurate
+exact
+correct
+right
+proper
+appropriate
+suitable
+fitting
+matching
+corresponding
+equivalent
+identical
+same
+similar
+like
+alike
+comparable
+analogous
+parallel
+related
+connected
+linked
+associated
+affiliated
+attached
+joined
+united
+combined
+merged
+integrated
+incorporated
+included
+contained
+comprised
+consisted
+constituted
+formed
+shaped
+molded
+crafted
+fashioned
+styled
+designed
+planned
+prepared
+organized
+arranged
+structured
+ordered
+sorted
+classified
+categorized
+grouped
+clustered
+bundled
+packaged
+wrapped
+covered
+protected
+secured
+safeguarded
+defended
+shielded
+guarded
+watched
+monitored
+observed
+tracked
+followed
+pursued
+chased
+hunted
+searched
+sought
+looked
+explored
+investigated
+examined
+inspected
+checked
+tested
+verified
+validated
+confirmed
+approved
+accepted
+recognized
+acknowledged
+identified
+detected
+discovered
+found
+located
+spotted
+noticed
+seen
+viewed
+watched
+observed
+monitored
+tracked
+followed
+traced
+mapped
+charted
+plotted
+graphed
+diagrammed
+illustrated
+depicted
+portrayed
+represented
+symbolized
+signified
+meant
+indicated
+shown
+displayed
+exhibited
+presented
+demonstrated
+illustrated
+explained
+described
+detailed
+specified
+defined
+clarified
+elucidated
+illuminated
+enlightened
+informed
+educated
+taught
+instructed
+trained
+coached
+mentored
+guided
+directed
+led
+steered
+navigated
+piloted
+driven
+operated
+controlled
+managed
+administered
+supervised
+overseen
+regulated
+governed
+ruled
+commanded
+ordered
+directed
+instructed
+told
+said
+spoken
+uttered
+voiced
+expressed
+stated
+declared
+announced
+proclaimed
+published
+broadcast
+transmitted
+communicated
+conveyed
+delivered
+sent
+transferred
+transported
+carried
+moved
+shifted
+relocated
+transferred
+displaced
+repositioned
+rearranged
+reorganized
+restructured
+reformed
+remodeled
+renovated
+restored
+repaired
+fixed
+mended
+healed
+cured
+treated
+helped
+assisted
+supported
+aided
+served
+provided
+supplied
+furnished
+equipped
+outfitted
+fitted
+prepared
+ready
+set
+go
+start
+begin
+commence
+initiate
+launch
+open
+activate
+enable
+turn on
+switch on
+power on
+boot up
+start up
+wake up
+rise
+arise
+emerge
+appear
+surface
+show up
+turn up
+arrive
+reach
+attain
+achieve
+accomplish
+complete
+finish
+end
+conclude
+terminate
+stop
+halt
+cease
+pause
+rest
+relax
+unwind
+decompress
+destress
+calm down
+settle down
+quiet down
+cool down
+chill out
+hang out
+lounge
+recline
+lie down
+sit down
+stand up
+get up
+rise up
+move up
+go up
+climb up
+ascend
+elevate
+lift
+raise
+hoist
+heave
+pull up
+draw up
+bring up
+take up
+pick up
+gather up
+collect up
+round up
+herd up
+drive up
+push up
+press up
+force up
+thrust up
+shove up
+jam up
+stuff up
+pack up
+fill up
+load up
+stock up
+supply up
+provide up
+furnish up
+equip up
+outfit up
+prepare up
+ready up
+set up
+arrange up
+organize up
+structure up
+order up
+sort up
+classify up
+categorize up
+group up
+cluster up
+bundle up
+package up
+wrap up
+cover up
+protect up
+secure up
+safeguard up
+defend up
+shield up
+guard up
+watch up
+monitor up
+observe up
+track up
+follow up
+pursue up
+chase up
+hunt up
+search up
+seek up
+look up
+explore up
+investigate up
+examine up
+inspect up
+check up
+test up
+verify up
+validate up
+confirm up
+approve up
+accept up
+recognize up
+acknowledge up
+identify up
+detect up
+discover up
+find up
+locate up
+spot up
+notice up
+see up
+view up
+watch up
+observe up
+monitor up
+track up
+follow up
+trace up
+map up
+chart up
+plot up
+graph up
+diagram up
+illustrate up
+depict up
+portray up
+represent up
+symbolize up
+signify up
+mean up
+indicate up
+show up
+display up
+exhibit up
+present up
+demonstrate up
+illustrate up
+explain up
+describe up
+detail up
+specify up
+define up
+clarify up
+elucidate up
+illuminate up
+enlighten up
+inform up
+educate up
+teach up
+instruct up
+train up
+coach up
+mentor up
+guide up
+direct up
+lead up
+steer up
+navigate up
+pilot up
+drive up
+operate up
+control up
+manage up
+administer up
+supervise up
+oversee up
+regulate up
+govern up
+rule up
+command up
+order up
+direct up
+instruct up
+tell up
+say up
+speak up
+utter up
+voice up
+express up
+state up
+declare up
+announce up
+proclaim up
+publish up
+broadcast up
+transmit up
+communicate up
+convey up
+deliver up
+send up
+transfer up
+transport up
+carry up
+move up
+shift up
+relocate up
+transfer up
+displace up
+reposition up
+rearrange up
+reorganize up
+restructure up
+reform up
+remodel up
+renovate up
+restore up
+repair up
+fix up
+mend up
+heal up
+cure up
+treat up
+help up
+assist up
+support up
+aid up
+serve up
+provide up
+supply up
+furnish up
+equip up
+outfit up
+fit up
+prepare up
+ready up
+set up
+go up
+start up
+begin up
+commence up
+initiate up
+launch up
+open up
+activate up
+enable up

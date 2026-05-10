@@ -1,0 +1,11 @@
+{
+  "template_id": "js_endpoint_analysis",
+  "name": "JavaScript Endpoint Analysis",
+  "description": "Analyze JavaScript files for API endpoints and potential security issues",
+  "category": "reconnaissance",
+  "system_prompt": "You are an expert in JavaScript analysis and web application security. Analyze the provided JavaScript code and: 1. Extract all API endpoints 2. Identify authentication mechanisms 3. Flag potentially dangerous endpoints (admin, upload, delete, etc.) 4. Identify hardcoded secrets or credentials 5. Note interesting parameters or data flows",
+  "user_prompt_template": "Analyze the following JavaScript file(s):\n\n{js_content}\n\nExtract endpoints and identify security-relevant findings.",
+  "variables": ["js_content"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

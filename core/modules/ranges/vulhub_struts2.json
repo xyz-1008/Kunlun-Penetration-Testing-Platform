@@ -1,0 +1,19 @@
+{
+  "range_id": "vulhub_struts2",
+  "name": "VulHub - Struts2 RCE (CVE-2017-5638)",
+  "description": "Apache Struts2 remote code execution vulnerability (CVE-2017-5638). Practice real-world CVE exploitation.",
+  "difficulty": "intermediate",
+  "vulnerability_types": ["rce"],
+  "estimated_time_minutes": 30,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 512,
+  "docker_image": "vulhub/struts2:s2-045",
+  "docker_compose_file": "",
+  "default_port": 8080,
+  "default_credentials": [],
+  "tags": ["java", "struts2", "cve", "rce", "real-world"],
+  "author": "VulHub",
+  "version": "1.0",
+  "is_official": true,
+  "community_rating": 4.5
+}

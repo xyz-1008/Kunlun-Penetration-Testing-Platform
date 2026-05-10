@@ -1,0 +1,26 @@
+name: "CommonsBeanutils1"
+category: "commons_beanutils"
+description: "CommonsBeanutils1 gadget chain using BeanComparator"
+jdk_version: "all"
+dependencies:
+  - name: "commons-beanutils"
+    version: "1.9.2"
+  - name: "commons-collections"
+    version: "3.1-3.2.1"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.apache.commons.beanutils.BeanComparator"
+    method_name: "compare"
+    parameters: []
+  - class_name: "java.util.PriorityQueue"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "org.apache.commons.collections.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters:
+      - "{command}"

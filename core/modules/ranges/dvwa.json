@@ -1,0 +1,21 @@
+{
+  "range_id": "dvwa",
+  "name": "DVWA (Damn Vulnerable Web Application)",
+  "description": "A PHP/MySQL web application containing various vulnerabilities for practice. Covers SQL Injection, XSS, CSRF, File Upload, Command Injection, and more.",
+  "difficulty": "beginner",
+  "vulnerability_types": ["sql_injection", "xss", "csrf", "file_upload", "command_injection", "auth_bypass"],
+  "estimated_time_minutes": 120,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 256,
+  "docker_image": "vulnerables/web-dvwa:latest",
+  "docker_compose_file": "",
+  "default_port": 80,
+  "default_credentials": [
+    {"username": "admin", "password": "password"}
+  ],
+  "tags": ["php", "mysql", "web", "classic"],
+  "author": "ethicalhack3r",
+  "version": "1.10",
+  "is_official": true,
+  "community_rating": 4.8
+}

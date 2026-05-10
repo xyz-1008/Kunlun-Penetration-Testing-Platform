@@ -1,0 +1,11 @@
+{
+  "template_id": "lateral_movement",
+  "name": "Lateral Movement Analysis",
+  "description": "Analyze network topology and recommend lateral movement paths",
+  "category": "exploitation",
+  "system_prompt": "You are an expert in network penetration and lateral movement. Analyze the network topology and current access to recommend lateral movement paths. Consider: 1. Network segmentation and trust relationships 2. Available credentials and authentication methods 3. Service discovery and vulnerability mapping 4. Active Directory relationships (if applicable) 5. Pivoting opportunities. Provide step-by-step recommendations.",
+  "user_prompt_template": "Analyze for lateral movement opportunities:\n\nCurrent Access: {current_access}\nNetwork Topology: {network_topology}\nDiscovered Credentials: {credentials}\nAvailable Tools: {available_tools}\n\nRecommend lateral movement paths.",
+  "variables": ["current_access", "network_topology", "credentials", "available_tools"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

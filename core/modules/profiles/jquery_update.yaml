@@ -1,0 +1,43 @@
+# jQuery Update Simulation Profile
+# Simulates jQuery library update check requests
+#
+# Usage: Load this profile to make Beacon traffic appear as jQuery AJAX requests
+# to a JavaScript CDN endpoint.
+
+name: jquery_update
+version: "1.0.0"
+author: "Kunlun Security Lab"
+description: "Simulates jQuery AJAX update requests with GET method and JavaScript file URI patterns"
+protocols:
+  - https
+
+http:
+  http_method: GET
+  http_uri: "/js/jquery-{{random_string}}.min.js?ts={{timestamp}}"
+  user_agent:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  headers:
+    Accept: "application/javascript, */*;q=0.8"
+    Accept-Encoding: "gzip, deflate, br"
+    Accept-Language: "en-US,en;q=0.9"
+    Cache-Control: "no-cache"
+    Pragma: "no-cache"
+  referer: "https://{{hostname}}/index.html"
+  cookie: "session={{random_string}}; _ga={{random_string}}"
+  body_format: plain
+  body_template: ""
+
+heartbeat:
+  sleep_time: 120
+  jitter: 30
+  max_retry: 5
+  work_hours_start: 9
+  work_hours_end: 18
+  work_hours_multiplier: 0.5
+
+encryption:
+  encryption: aes-256-gcm
+  encoding: base64
+  key: ""

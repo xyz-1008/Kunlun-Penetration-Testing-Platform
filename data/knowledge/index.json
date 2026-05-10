@@ -1,0 +1,119 @@
+{
+  "k001": {
+    "id": "k001",
+    "title": "SQL注入攻击原理与防御",
+    "category": "攻击技术",
+    "content": "\n<h2>SQL注入攻击原理</h2>\n<p>SQL注入是一种代码注入技术，攻击者通过在应用程序的输入中插入恶意SQL代码来操纵数据库。</p>\n\n<h3>攻击类型</h3>\n<ul>\n    <li><strong>布尔盲注</strong> - 通过页面响应的真假来推断信息</li>\n    <li><strong>时间盲注</strong> - 通过响应时间的差异来推断信息</li>\n    <li><strong>错误回显</strong> - 利用数据库错误信息获取数据</li>\n    <li><strong>UNION查询</strong> - 合并查询结果</li>\n    <li><strong>堆叠查询</strong> - 执行多条SQL语句</li>\n</ul>\n\n<h3>防御措施</h3>\n<ul>\n    <li>使用参数化查询</li>\n    <li>输入验证和过滤</li>\n    <li>最小权限原则</li>\n    <li>使用ORM框架</li>\n    <li>部署WAF</li>\n</ul>\n                ",
+    "author": "昆仑安全实验室",
+    "tags": [
+      "SQL注入",
+      "Web安全",
+      "攻击技术",
+      "防御"
+    ],
+    "rating": 5,
+    "difficulty": "入门",
+    "created_at": "2026-04-18 14:14:52",
+    "updated_at": "2026-04-18 14:14:52",
+    "status": "已发布",
+    "summary": "",
+    "views": 13,
+    "likes": 0,
+    "related_items": [],
+    "bookmark": false,
+    "progress": 0
+  },
+  "k002": {
+    "id": "k002",
+    "title": "XSS跨站脚本攻击详解",
+    "category": "攻击技术",
+    "content": "\n<h2>XSS攻击概述</h2>\n<p>跨站脚本攻击（XSS）是一种在Web应用中注入恶意脚本的安全漏洞。</p>\n\n<h3>攻击类型</h3>\n<ul>\n    <li><strong>反射型XSS</strong> - 脚本在URL中，服务器反射回页面</li>\n    <li><strong>存储型XSS</strong> - 脚本存储在服务器数据库中</li>\n    <li><strong>DOM型XSS</strong> - 脚本在客户端DOM中执行</li>\n</ul>\n\n<h3>防御方法</h3>\n<ul>\n    <li>输出编码</li>\n    <li>Content Security Policy (CSP)</li>\n    <li>HttpOnly Cookie</li>\n    <li>输入验证</li>\n</ul>\n                ",
+    "author": "昆仑安全实验室",
+    "tags": [
+      "XSS",
+      "跨站脚本",
+      "Web安全"
+    ],
+    "rating": 5,
+    "difficulty": "入门",
+    "created_at": "2026-04-18 14:14:52",
+    "updated_at": "2026-04-18 14:14:52",
+    "status": "已发布",
+    "summary": "",
+    "views": 2,
+    "likes": 0,
+    "related_items": [],
+    "bookmark": false,
+    "progress": 0
+  },
+  "k003": {
+    "id": "k003",
+    "title": "OWASP Top 10 2021 解读",
+    "category": "安全标准",
+    "content": "\n<h2>OWASP Top 10 2021</h2>\n<p>OWASP Top 10是最关键的Web应用程序安全风险列表。</p>\n\n<h3>2021版Top 10</h3>\n<ol>\n    <li><strong>A01:2021</strong> - 访问控制失效</li>\n    <li><strong>A02:2021</strong> - 加密失效</li>\n    <li><strong>A03:2021</strong> - 注入</li>\n    <li><strong>A04:2021</strong> - 不安全设计</li>\n    <li><strong>A05:2021</strong> - 安全配置错误</li>\n    <li><strong>A06:2021</strong> - 易受攻击和过时的组件</li>\n    <li><strong>A07:2021</strong> - 识别和认证失效</li>\n    <li><strong>A08:2021</strong> - 软件和数据完整性失效</li>\n    <li><strong>A09:2021</strong> - 安全日志和监控失效</li>\n    <li><strong>A10:2021</strong> - 服务端请求伪造 (SSRF)</li>\n</ol>\n                ",
+    "author": "昆仑安全实验室",
+    "tags": [
+      "OWASP",
+      "安全标准",
+      "Top 10"
+    ],
+    "rating": 5,
+    "difficulty": "入门",
+    "created_at": "2026-04-18 14:14:52",
+    "updated_at": "2026-04-18 14:14:52",
+    "status": "已发布",
+    "summary": "",
+    "views": 0,
+    "likes": 0,
+    "related_items": [],
+    "bookmark": false,
+    "progress": 0
+  },
+  "k004": {
+    "id": "k004",
+    "title": "Burp Suite 专业使用指南",
+    "category": "工具使用",
+    "content": "\n<h2>Burp Suite 介绍</h2>\n<p>Burp Suite是Web应用安全测试的行业标准工具集。</p>\n\n<h3>核心组件</h3>\n<ul>\n    <li><strong>Proxy</strong> - 拦截和修改HTTP/HTTPS流量</li>\n    <li><strong>Scanner</strong> - 自动漏洞扫描</li>\n    <li><strong>Intruder</strong> - 自动化攻击</li>\n    <li><strong>Repeater</strong> - 手动测试和重放请求</li>\n    <li><strong>Sequencer</strong> - 分析会话令牌随机性</li>\n    <li><strong>Decoder</strong> - 编码解码</li>\n    <li><strong>Comparer</strong> - 对比数据</li>\n    <li><strong>Extender</strong> - 扩展插件</li>\n</ul>\n\n<h3>工作流程</h3>\n<ol>\n    <li>配置浏览器代理</li>\n    <li>流量通过Proxy</li>\n    <li>使用Repeater测试</li>\n    <li>使用Intruder自动化</li>\n    <li>使用Scanner辅助</li>\n    <li>生成报告</li>\n</ol>\n                ",
+    "author": "昆仑安全实验室",
+    "tags": [
+      "Burp Suite",
+      "安全工具",
+      "Web测试"
+    ],
+    "rating": 4,
+    "difficulty": "入门",
+    "created_at": "2026-04-18 14:14:52",
+    "updated_at": "2026-04-18 14:14:52",
+    "status": "已发布",
+    "summary": "",
+    "views": 3,
+    "likes": 0,
+    "related_items": [],
+    "bookmark": false,
+    "progress": 0
+  },
+  "k005": {
+    "id": "k005",
+    "title": "CVE-2024-XXXX 最新漏洞分析",
+    "category": "漏洞情报",
+    "content": "\n<h2>CVE-2024-XXXX 漏洞概述</h2>\n<p>这是一个最新披露的严重漏洞，影响范围广泛。</p>\n\n<h3>漏洞详情</h3>\n<ul>\n    <li><strong>CVE ID:</strong> CVE-2024-XXXX</li>\n    <li><strong>发布日期:</strong> 2026-04-18</li>\n    <li><strong>CVSS评分:</strong> 9.8 (严重)</li>\n    <li><strong>影响版本:</strong> 1.0.0 - 2.5.0</li>\n    <li><strong>漏洞类型:</strong> 远程代码执行</li>\n</ul>\n\n<h3>修复方案</h3>\n<ul>\n    <li>升级到版本 2.5.1 或更高</li>\n    <li>应用官方补丁</li>\n    <li>实施临时缓解措施</li>\n    <li>部署WAF规则</li>\n</ul>\n\n<h3>检测方法</h3>\n<ul>\n    <li>检查软件版本</li>\n    <li>使用漏洞扫描器</li>\n    <li>检查异常日志</li>\n</ul>\n                ",
+    "author": "昆仑安全实验室",
+    "tags": [
+      "CVE",
+      "漏洞情报",
+      "RCE",
+      "应急响应"
+    ],
+    "rating": 5,
+    "difficulty": "入门",
+    "created_at": "2026-04-18 14:14:52",
+    "updated_at": "2026-04-18 14:14:52",
+    "status": "已发布",
+    "summary": "",
+    "views": 1,
+    "likes": 0,
+    "related_items": [],
+    "bookmark": false,
+    "progress": 0
+  }
+}

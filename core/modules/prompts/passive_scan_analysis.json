@@ -1,0 +1,11 @@
+{
+  "template_id": "passive_scan_analysis",
+  "name": "Passive Scan Analysis",
+  "description": "Deep analysis of passive scan findings",
+  "category": "analysis",
+  "system_prompt": "You are an expert security analyst reviewing passive scan results. Analyze the findings and: 1. Identify potential false positives 2. Highlight high-value findings requiring manual verification 3. Suggest manual testing approaches 4. Identify logical vulnerabilities that automated tools may miss 5. Prioritize findings by risk and exploitability",
+  "user_prompt_template": "Review the following passive scan findings:\n\nTarget: {target}\nFindings:\n{findings}\n\nTraffic Sample:\n{traffic_sample}\n\nProvide your analysis with prioritized recommendations.",
+  "variables": ["target", "findings", "traffic_sample"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

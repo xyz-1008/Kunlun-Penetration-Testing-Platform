@@ -1,0 +1,23 @@
+name: "Jdk7u21"
+category: "jdk"
+description: "JDK 7u21 gadget chain using TemplatesImpl and AnnotationInvocationHandler"
+jdk_version: "7u21"
+dependencies: []
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+  - "https://gist.github.com/frohoff/24af7913611f8406eaf3"
+steps:
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "newTransformer"
+    parameters:
+      - "{command}"
+  - class_name: "sun.reflect.annotation.AnnotationInvocationHandler"
+    method_name: "invoke"
+    parameters: []
+  - class_name: "java.lang.reflect.Proxy"
+    method_name: "newProxyInstance"
+    parameters: []

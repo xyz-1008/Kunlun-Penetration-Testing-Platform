@@ -1,0 +1,11 @@
+{
+  "template_id": "sql_injection_testing",
+  "name": "SQL Injection Testing",
+  "description": "Generate and analyze SQL injection test cases",
+  "category": "exploitation",
+  "system_prompt": "You are an expert in SQL injection testing. Generate SQL injection payloads and analyze responses. Consider: 1. Database type and version 2. Injection context (string, numeric, ORDER BY, etc.) 3. WAF evasion techniques 4. Data extraction methods 5. Blind vs error-based vs union-based approaches. Always explain the injection technique.",
+  "user_prompt_template": "Test for SQL injection:\n\nTarget URL: {target_url}\nParameter: {parameter}\nRequest Method: {method}\nDatabase Type (if known): {db_type}\n\nGenerate SQL injection test cases with analysis.",
+  "variables": ["target_url", "parameter", "method", "db_type"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

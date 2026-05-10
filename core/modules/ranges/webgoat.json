@@ -1,0 +1,22 @@
+{
+  "range_id": "webgoat",
+  "name": "WebGoat",
+  "description": "A deliberately insecure Web Application maintained by OWASP designed to teach web application security concepts. Covers OWASP Top 10 vulnerabilities.",
+  "difficulty": "beginner",
+  "vulnerability_types": ["sql_injection", "xss", "csrf", "auth_bypass", "idor", "ssrf", "xxe"],
+  "estimated_time_minutes": 180,
+  "required_cpu_cores": 2,
+  "required_memory_mb": 1024,
+  "docker_image": "webgoat/webgoat:latest",
+  "docker_compose_file": "",
+  "default_port": 8080,
+  "default_credentials": [
+    {"username": "guest", "password": "guest"},
+    {"username": "admin", "password": "admin"}
+  ],
+  "tags": ["java", "spring", "owasp", "comprehensive"],
+  "author": "OWASP",
+  "version": "2023.8",
+  "is_official": true,
+  "community_rating": 4.9
+}

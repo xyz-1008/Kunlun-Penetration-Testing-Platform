@@ -1,0 +1,46 @@
+# REST API Mock Simulation Profile
+# Simulates common REST API status check requests
+#
+# Usage: Load this profile to make Beacon traffic appear as standard REST API
+# requests to a versioned API endpoint.
+
+name: api_mock
+version: "1.0.0"
+author: "Kunlun Security Lab"
+description: "Simulates common REST API requests with GET /api/v2/status pattern"
+protocols:
+  - https
+
+http:
+  http_method: GET
+  http_uri: "/api/v2/status?client={{beacon_id}}&ts={{timestamp}}&nonce={{random_string}}"
+  user_agent:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "python-requests/2.31.0"
+    - "axios/1.6.2"
+  headers:
+    Accept: "application/json, text/plain, */*"
+    Accept-Encoding: "gzip, deflate, br"
+    Accept-Language: "en-US,en;q=0.9"
+    Content-Type: "application/json"
+    X-Api-Key: "{{random_hex}}"
+    X-Request-Id: "{{random_hex}}"
+    X-Client-Version: "2.1.0"
+    Origin: "https://{{hostname}}"
+    Referer: "https://{{hostname}}/dashboard"
+  cookie: "auth_token={{random_string}}; refresh_token={{random_string}}"
+  body_format: json
+  body_template: '{"client_id":"{{beacon_id}}","timestamp":"{{date_iso}}","nonce":"{{random_string}}","payload":"{{payload}}"}'
+
+heartbeat:
+  sleep_time: 60
+  jitter: 35
+  max_retry: 5
+  work_hours_start: 9
+  work_hours_end: 18
+  work_hours_multiplier: 0.6
+
+encryption:
+  encryption: aes-256-gcm
+  encoding: base64
+  key: ""

@@ -1,0 +1,103 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyo
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# PyInstaller
+*.manifest
+*.spec.backup
+
+# PyArmor
+dist_encrypted/
+pyarmor_runtime/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Certificates (敏感文件)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+certs/
+
+# Config (包含密钥的配置文件)
+config/secrets.enc
+config/encryption.key
+config/api_keys.json
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# PyArmor
+.pyarmor/
+
+# Temporary files
+*.tmp
+*.bak
+*.temp
+temp/
+
+# Release artifacts
+*.zip
+*.tar.gz
+*.dmg
+*.exe
+*.msi

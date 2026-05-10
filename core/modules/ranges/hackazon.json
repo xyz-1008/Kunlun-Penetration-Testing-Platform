@@ -1,0 +1,21 @@
+{
+  "range_id": "hackazon",
+  "name": "Hackazon",
+  "description": "A modern vulnerable web application with REST API, mobile app support, and realistic business logic vulnerabilities.",
+  "difficulty": "intermediate",
+  "vulnerability_types": ["sql_injection", "xss", "api_security", "business_logic", "idor"],
+  "estimated_time_minutes": 150,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 512,
+  "docker_image": "rapid7/hackazon:latest",
+  "docker_compose_file": "",
+  "default_port": 80,
+  "default_credentials": [
+    {"username": "admin", "password": "admin"}
+  ],
+  "tags": ["php", "rest", "api", "mobile", "realistic"],
+  "author": "Rapid7",
+  "version": "1.0",
+  "is_official": true,
+  "community_rating": 4.4
+}

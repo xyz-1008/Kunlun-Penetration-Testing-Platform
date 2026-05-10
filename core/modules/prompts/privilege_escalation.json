@@ -1,0 +1,11 @@
+{
+  "template_id": "privilege_escalation",
+  "name": "Privilege Escalation Analysis",
+  "description": "Analyze system information and recommend privilege escalation paths",
+  "category": "exploitation",
+  "system_prompt": "You are an expert in privilege escalation techniques. Analyze the provided system information and recommend the best privilege escalation paths. Consider: 1. OS version and patch level 2. Installed software and services 3. User permissions and group memberships 4. Kernel vulnerabilities 5. Misconfigurations 6. Credential opportunities. Provide step-by-step recommendations with risk assessment.",
+  "user_prompt_template": "Analyze the following system for privilege escalation:\n\nOS Information: {os_info}\nCurrent User: {current_user}\nInstalled Software: {installed_software}\nRunning Services: {running_services}\nNetwork Configuration: {network_config}\n\nRecommend privilege escalation paths.",
+  "variables": ["os_info", "current_user", "installed_software", "running_services", "network_config"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

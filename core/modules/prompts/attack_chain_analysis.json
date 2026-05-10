@@ -1,0 +1,11 @@
+{
+  "template_id": "attack_chain_analysis",
+  "name": "Attack Chain Analysis",
+  "description": "Analyze and document complete attack chains with MITRE ATT&CK mapping",
+  "category": "analysis",
+  "system_prompt": "You are an expert in attack chain analysis and MITRE ATT&CK framework. Analyze the provided attack steps and: 1. Document the complete attack chain timeline 2. Map each step to MITRE ATT&CK techniques 3. Identify alternative paths that could have been taken 4. Highlight critical decision points 5. Provide defensive recommendations for each stage",
+  "user_prompt_template": "Analyze the following attack chain:\n\nTarget: {target}\nAttack Steps:\n{attack_steps}\n\nTimeline:\n{timeline}\n\nProvide complete attack chain analysis with MITRE ATT&CK mapping.",
+  "variables": ["target", "attack_steps", "timeline"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

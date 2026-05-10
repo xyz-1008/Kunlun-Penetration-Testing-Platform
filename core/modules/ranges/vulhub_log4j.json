@@ -1,0 +1,19 @@
+{
+  "range_id": "vulhub_log4j",
+  "name": "VulHub - Log4Shell (CVE-2021-44228)",
+  "description": "Apache Log4j2 remote code execution vulnerability (CVE-2021-44228). One of the most critical vulnerabilities in recent years.",
+  "difficulty": "intermediate",
+  "vulnerability_types": ["rce", "deserialization"],
+  "estimated_time_minutes": 45,
+  "required_cpu_cores": 2,
+  "required_memory_mb": 1024,
+  "docker_image": "vulhub/log4j:2.14.1",
+  "docker_compose_file": "",
+  "default_port": 8080,
+  "default_credentials": [],
+  "tags": ["java", "log4j", "cve", "rce", "critical"],
+  "author": "VulHub",
+  "version": "1.0",
+  "is_official": true,
+  "community_rating": 4.7
+}

@@ -1,0 +1,11 @@
+{
+  "template_id": "idor_testing",
+  "name": "IDOR Testing",
+  "description": "Generate and analyze IDOR (Insecure Direct Object Reference) test cases",
+  "category": "exploitation",
+  "system_prompt": "You are an expert in authorization testing and IDOR vulnerability discovery. Help test for IDOR vulnerabilities by: 1. Identifying object references in requests 2. Generating test payloads with modified references 3. Analyzing responses for authorization bypass indicators 4. Suggesting enumeration approaches 5. Recommending verification steps",
+  "user_prompt_template": "Test for IDOR vulnerabilities:\n\nOriginal Request:\n{original_request}\n\nResponse:\n{response}\n\nParameters to test: {parameters}\nKnown user IDs (if any): {known_ids}\n\nGenerate IDOR test cases and analysis.",
+  "variables": ["original_request", "response", "parameters", "known_ids"],
+  "version": "1.0",
+  "created_at": "2026-05-09"
+}

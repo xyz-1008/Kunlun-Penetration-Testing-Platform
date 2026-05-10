@@ -1,0 +1,46 @@
+# Microsoft Office 365 Telemetry Simulation Profile
+# Simulates Office 365 telemetry and diagnostic data requests
+#
+# Usage: Load this profile to make Beacon traffic appear as Microsoft Office
+# telemetry data being sent to Office 365 endpoints.
+
+name: microsoft_office
+version: "1.0.0"
+author: "Kunlun Security Lab"
+description: "Simulates Office 365 telemetry requests with POST /api/telemetry endpoint"
+protocols:
+  - https
+
+http:
+  http_method: POST
+  http_uri: "/api/telemetry/v1.0/{{beacon_id}}/diagnostics"
+  user_agent:
+    - "Microsoft Office/16.0 (Windows NT 10.0; Microsoft Outlook 16.0.17126; Pro)"
+    - "Microsoft Office/16.0 (Windows NT 10.0; Microsoft Excel 16.0.17126; Pro)"
+    - "Microsoft Office/16.0 (Windows NT 10.0; Microsoft Word 16.0.17126; Pro)"
+  headers:
+    Accept: "application/json"
+    Accept-Encoding: "gzip, deflate"
+    Accept-Language: "en-US,en;q=0.9"
+    Authorization: "Bearer {{random_string}}"
+    Content-Type: "application/json; charset=utf-8"
+    Client-Request-Id: "{{random_hex}}"
+    X-Client-Data: "{{random_string}}"
+    X-MS-Client-Session-Id: "{{random_string}}"
+    Referer: "https://outlook.office365.com/"
+  cookie: "ESTSAUTHPERSISTENT={{random_string}}; buid={{random_string}}"
+  body_format: json
+  body_template: '{"eventId":"{{random_hex}}","tenantId":"{{beacon_id}}","timestamp":"{{date_iso}}","data":{"payload":"{{payload}}","version":"16.0.17126.20144","platform":"Windows","sessionId":"{{random_string}}"}}'
+
+heartbeat:
+  sleep_time: 300
+  jitter: 20
+  max_retry: 4
+  work_hours_start: 8
+  work_hours_end: 18
+  work_hours_multiplier: 0.4
+
+encryption:
+  encryption: aes-256-gcm
+  encoding: base64
+  key: ""

@@ -1,0 +1,24 @@
+name: "Vaadin1"
+category: "vaadin"
+description: "Vaadin1 gadget chain using WebApplicationContext and Property"
+jdk_version: "all"
+dependencies:
+  - name: "vaadin-server"
+    version: "7.0-8.0"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "com.vaadin.server.WebApplicationContext"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "com.vaadin.data.util.PropertysetItem"
+    method_name: "getValue"
+    parameters: []
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

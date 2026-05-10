@@ -1,0 +1,304 @@
+# ============================================================
+# 昆仑被动扫描引擎 - 内置检测规则集
+# 规则格式对齐Nuclei模板规范
+# ============================================================
+
+# --- 信息泄露类 ---
+
+- id: passive-info-internal-ip
+  info:
+    name: 响应中包含内网IP地址
+    category: 信息泄露
+    severity: medium
+    description: 响应体中包含内网IP地址（10.x/172.16.x/192.168.x），可能导致内部网络拓扑泄露
+    remediation: 移除响应中的内网IP地址，使用域名或公网地址替代
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - '\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
+        - '\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b'
+        - '\b192\.168\.\d{1,3}\.\d{1,3}\b'
+
+- id: passive-info-email-leak
+  info:
+    name: 响应中包含邮箱地址
+    category: 信息泄露
+    severity: low
+    description: 响应体或响应头中包含邮箱地址，可能被爬虫收集用于钓鱼或垃圾邮件
+    remediation: 避免在公开页面中直接暴露邮箱地址，使用联系表单替代
+  enabled: true
+  matchers:
+    - type: regex
+      part: all
+      patterns:
+        - '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+
+- id: passive-info-cloud-key
+  info:
+    name: 疑似云服务密钥泄露
+    category: 信息泄露
+    severity: high
+    description: 响应体中包含疑似AWS/Azure/GCP密钥模式
+    remediation: 立即轮换泄露的密钥，确保密钥不通过前端代码或API响应暴露
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - 'AKIA[0-9A-Z]{16}'
+        - 'AIza[0-9A-Za-z\-_]{35}'
+        - 'eyJ[A-Za-z0-9\-_]+\.eyJ[A-Za-z0-9\-_]+'
+
+- id: passive-info-server-version
+  info:
+    name: 响应头泄露服务器版本信息
+    category: 信息泄露
+    severity: low
+    description: 响应头中包含Server/X-Powered-By/X-AspNet-Version等版本信息
+    remediation: 配置Web服务器隐藏或修改版本信息，如nginx的server_tokens off
+  enabled: true
+  matchers:
+    - type: regex
+      part: header
+      patterns:
+        - 'Server:.*(Apache|nginx|IIS|Tomcat|Jetty)[/\s]*[\d.]+'
+        - 'X-Powered-By:.*(PHP|ASP\.NET|Express)[/\s]*[\d.]+'
+        - 'X-AspNet-Version:[\s]*[\d.]+'
+
+- id: passive-info-html-comment
+  info:
+    name: HTML注释包含敏感关键词
+    category: 信息泄露
+    severity: low
+    description: HTML注释中包含TODO/FIXME/password/secret等敏感关键词
+    remediation: 清理HTML注释中的敏感信息，避免在注释中留下开发调试信息
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - '<!--.*?(TODO|FIXME|password|secret|token|key|api_key).*?-->'
+
+- id: passive-info-jwt-leak
+  info:
+    name: JWT Token明文传输风险
+    category: 信息泄露
+    severity: medium
+    description: JWT Token在响应体或响应头中明文传输，需检查算法安全性
+    remediation: 确保JWT使用强加密算法（RS256/ES256），密钥长度至少256位
+  enabled: true
+  matchers:
+    - type: regex
+      part: all
+      patterns:
+        - 'eyJ[A-Za-z0-9\-_]+\.eyJ[A-Za-z0-9\-_]+\.'
+
+# --- 安全配置缺陷类 ---
+
+- id: passive-config-xfo-missing
+  info:
+    name: 缺少X-Frame-Options头（点击劫持风险）
+    category: 安全配置缺陷
+    severity: medium
+    description: 响应缺少X-Frame-Options头，存在点击劫持（Clickjacking）风险
+    remediation: 添加X-Frame-Options: DENY或SAMEORIGIN响应头
+  enabled: true
+  matchers:
+    - type: word
+      part: header
+      words:
+        - "X-Frame-Options"
+      negative: true
+
+- id: passive-config-xcto-missing
+  info:
+    name: 缺少X-Content-Type-Options头
+    category: 安全配置缺陷
+    severity: low
+    description: 响应缺少X-Content-Type-Options: nosniff头，存在MIME嗅探风险
+    remediation: 添加X-Content-Type-Options: nosniff响应头
+  enabled: true
+  matchers:
+    - type: word
+      part: header
+      words:
+        - "X-Content-Type-Options"
+      negative: true
+
+- id: passive-config-csp-missing
+  info:
+    name: 缺少Content-Security-Policy头
+    category: 安全配置缺陷
+    severity: low
+    description: 响应缺少Content-Security-Policy头，无法防御XSS和数据注入攻击
+    remediation: 配置合理的Content-Security-Policy策略
+  enabled: true
+  matchers:
+    - type: word
+      part: header
+      words:
+        - "Content-Security-Policy"
+      negative: true
+
+- id: passive-config-hsts-missing
+  info:
+    name: 缺少Strict-Transport-Security头（HSTS缺失）
+    category: 安全配置缺陷
+    severity: medium
+    description: HTTPS响应缺少Strict-Transport-Security头，存在SSL剥离攻击风险
+    remediation: 添加Strict-Transport-Security: max-age=31536000; includeSubDomains响应头
+  enabled: true
+  scope:
+    status_codes: [200, 301, 302]
+  matchers:
+    - type: word
+      part: header
+      words:
+        - "Strict-Transport-Security"
+      negative: true
+
+- id: passive-config-cookie-flags
+  info:
+    name: Cookie缺少HttpOnly/Secure标志
+    category: 安全配置缺陷
+    severity: medium
+    description: Set-Cookie未设置HttpOnly和Secure标志，Cookie可能被JavaScript读取或通过HTTP传输
+    remediation: 为所有Cookie添加HttpOnly和Secure标志
+  enabled: true
+  matchers:
+    - type: regex
+      part: header
+      patterns:
+        - 'Set-Cookie:(?:(?!HttpOnly).)*$'
+        - 'Set-Cookie:(?:(?!Secure).)*$'
+
+- id: passive-config-cors-wildcard
+  info:
+    name: CORS配置过于宽松
+    category: 安全配置缺陷
+    severity: medium
+    description: Access-Control-Allow-Origin设置为*，允许任意域跨域访问
+    remediation: 将Access-Control-Allow-Origin限制为受信任的域名
+  enabled: true
+  matchers:
+    - type: word
+      part: header
+      words:
+        - "Access-Control-Allow-Origin: *"
+
+# --- 漏洞模式类 ---
+
+- id: passive-vuln-sql-error
+  info:
+    name: SQL错误消息暴露
+    category: 漏洞模式
+    severity: high
+    description: 响应体中包含SQL错误消息，可能存在SQL注入漏洞或错误配置
+    remediation: 配置自定义错误页面，避免将数据库错误信息返回给客户端
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - 'SQL syntax.*MySQL'
+        - 'Warning.*mysql_fetch'
+        - 'ORA-\d{5}'
+        - 'PostgreSQL.*ERROR'
+        - 'SQLite.*error'
+        - 'Microsoft OLE DB.*error'
+        - 'ODBC Driver.*error'
+        - 'Unclosed quotation mark'
+        - 'SQL command not properly ended'
+
+- id: passive-vuln-stack-trace
+  info:
+    name: 堆栈跟踪信息泄露
+    category: 漏洞模式
+    severity: medium
+    description: 响应体中包含堆栈跟踪信息，可能泄露代码路径和逻辑
+    remediation: 在生产环境关闭调试模式，配置自定义错误页面
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - 'Stack trace:'
+        - 'Exception in'
+        - 'Traceback \(most recent call last\)'
+        - 'at \w+\.\w+\([\w.]+:\d+\)'
+        - 'File "[\w/\.]+", line \d+'
+        - '\.NET Framework.*error'
+        - 'System\.\w+\.\w+Exception'
+
+- id: passive-vuln-path-disclosure
+  info:
+    name: 服务器路径泄露
+    category: 漏洞模式
+    severity: medium
+    description: 响应体中包含服务器绝对路径，可能泄露服务器目录结构
+    remediation: 配置Web服务器隐藏文件路径，使用URL重写
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - '/var/www/[\w/]+'
+        - 'C:\\inetpub\\[\w\\]+'
+        - '/home/\w+/public_html'
+        - 'WEB-INF/web\.xml'
+        - '/usr/local/[\w/]+'
+
+- id: passive-vuln-directory-listing
+  info:
+    name: 目录列表暴露
+    category: 漏洞模式
+    severity: medium
+    description: 响应体包含目录列表，可能暴露敏感文件
+    remediation: 在Web服务器配置中禁用目录列表功能
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - '<title>Index of /[\w/]*</title>'
+        - '<h1>Index of /[\w/]*</h1>'
+        - '<a href="[^"]+">[^<]+</a>\s*\d{2}-[A-Z][a-z]{2}-\d{4}'
+        - 'Directory Listing For'
+        - '\[To Parent Directory\]'
+
+- id: passive-vuln-php-info
+  info:
+    name: PHP信息泄露
+    category: 漏洞模式
+    severity: high
+    description: 响应体包含phpinfo()输出，泄露PHP配置详情
+    remediation: 立即删除phpinfo()调用，禁止在生产环境暴露PHP配置
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - '<title>phpinfo\(\)</title>'
+        - 'PHP Version [\d.]+</td>'
+        - '<h1 class="p">PHP Version [\d.]+</h1>'
+
+- id: passive-vuln-debug-mode
+  info:
+    name: 调试模式开启
+    category: 漏洞模式
+    severity: high
+    description: 检测到应用调试模式开启，可能泄露敏感调试信息
+    remediation: 在生产环境关闭所有调试模式和详细错误输出
+  enabled: true
+  matchers:
+    - type: regex
+      part: body
+      patterns:
+        - 'Django DEBUG = True'
+        - 'Whoops! There was an error'
+        - 'laravel-debugbar'
+        - 'Symfony Web Debug Toolbar'
+        - '<!-- DEBUG MODE -->'
+        - 'debug\.log'
