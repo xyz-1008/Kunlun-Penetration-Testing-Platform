@@ -1,20 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-昆仑渗透测试平台 - PyArmor 加密脚本
-====================================
-功能：
-  1. 对整个项目进行AES-256加密与代码混淆
-  2. 排除不需要加密的文件（配置文件、YAML规则、JSON模板等纯数据文件）
-  3. 使用--advanced模式启用高级反编译保护
-  4. 对敏感字符串常量进行加密保护
-  5. 输出到dist_encrypted目录
-
-使用方法：
-  python pyarmor_obfuscate.py [--advanced] [--no-string-encrypt] [--output DIR]
-
-依赖：
-  pip install pyarmor
+KunLun Penetration Testing Platform - PyArmor Encryption Script
 """
 
 import os
@@ -24,6 +11,12 @@ import argparse
 import subprocess
 from pathlib import Path
 from typing import List, Set
+
+# Fix encoding for Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # ==================== 配置 ====================
 # 项目根目录
