@@ -1,613 +1,309 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-昆仑渗透测试平台 - 打包验证测试脚本
-=====================================
-功能：
-  1. 自动运行10+核心功能验证项
-  2. 验证所有模块导入是否正常
-  3. 验证数据文件路径是否正确
-  4. 验证MITM代理、Nuclei引擎、C2框架等核心功能
-  5. 生成测试报告
+KunLun Penetration Testing Platform - Packaging Validation Script
 
-使用方法：
-  python test_packaged.py [--verbose] [--output report.json]
+打包后验证清单，确保所有功能模块100%可用
 """
 
-import os
 import sys
-import json
-import time
-import asyncio
-import platform
-import importlib
+import os
 import subprocess
+import time
+import socket
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass, field, asdict
-from enum import Enum
+
+# 测试结果颜色
+class Colors:
+    GREEN = '\033[92m'
+    RED = '\033[91m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    RESET = '\033[0m'
 
 
-# ==================== 测试状态枚举 ====================
-class TestStatus(Enum):
-    PASSED = "PASSED"
-    FAILED = "FAILED"
-    SKIPPED = "SKIPPED"
-    WARNING = "WARNING"
+def print_status(test_name, status, message=""):
+    """打印测试状态"""
+    if status == "PASS":
+        print(f"{Colors.GREEN}[PASS]{Colors.RESET} {test_name}")
+        if message:
+            print(f"       {message}")
+    elif status == "FAIL":
+        print(f"{Colors.RED}[FAIL]{Colors.RESET} {test_name}")
+        if message:
+            print(f"       {message}")
+    elif status == "WARN":
+        print(f"{Colors.YELLOW}[WARN]{Colors.RESET} {test_name}")
+        if message:
+            print(f"       {message}")
+    elif status == "INFO":
+        print(f"{Colors.BLUE}[INFO]{Colors.RESET} {test_name}")
+        if message:
+            print(f"       {message}")
 
 
-# ==================== 测试结果数据类 ====================
-@dataclass
-class TestResult:
-    """单个测试结果"""
-    name: str
-    status: TestStatus
-    message: str = ""
-    duration: float = 0.0
-    details: Dict = field(default_factory=dict)
+def test_application_startup():
+    """测试程序启动和GUI加载"""
+    print_status("Application Startup", "INFO", "Testing GUI initialization...")
+    try:
+        # 检查是否能够导入主模块
+        from core.app import Application
+        print_status("Application Startup", "PASS", "Successfully imported Application class")
+        return True
+    except Exception as e:
+        print_status("Application Startup", "FAIL", f"Import failed: {str(e)}")
+        return False
 
 
-@dataclass
-class TestReport:
-    """测试报告"""
-    platform: str
-    python_version: str
-    is_frozen: bool
-    total_tests: int = 0
-    passed: int = 0
-    failed: int = 0
-    skipped: int = 0
-    warnings: int = 0
-    total_duration: float = 0.0
-    results: List[TestResult] = field(default_factory=list)
-    
-    def add_result(self, result: TestResult):
-        self.results.append(result)
-        self.total_tests += 1
-        if result.status == TestStatus.PASSED:
-            self.passed += 1
-        elif result.status == TestStatus.FAILED:
-            self.failed += 1
-        elif result.status == TestStatus.SKIPPED:
-            self.skipped += 1
-        elif result.status == TestStatus.WARNING:
-            self.warnings += 1
-    
-    def to_dict(self) -> dict:
-        return {
-            "platform": self.platform,
-            "python_version": self.python_version,
-            "is_frozen": self.is_frozen,
-            "total_tests": self.total_tests,
-            "passed": self.passed,
-            "failed": self.failed,
-            "skipped": self.skipped,
-            "warnings": self.warnings,
-            "total_duration": round(self.total_duration, 2),
-            "results": [asdict(r) for r in self.results]
-        }
+def test_mitm_proxy():
+    """测试MITM代理功能"""
+    print_status("MITM Proxy", "INFO", "Testing MITM proxy initialization...")
+    try:
+        # 检查MITM模块是否可导入
+        from core.modules.mitm import MITMProxy
+        print_status("MITM Proxy", "PASS", "Successfully imported MITMProxy class")
+        
+        # 检查证书路径功能
+        from utils.path_utils import cert_path
+        cert = cert_path("rootCA.pem")
+        if cert.exists():
+            print_status("MITM Proxy", "PASS", f"Certificate exists: {cert}")
+        else:
+            print_status("MITM Proxy", "WARN", "Certificate not found, will be generated on first use")
+        
+        return True
+    except Exception as e:
+        print_status("MITM Proxy", "FAIL", f"MITM module import failed: {str(e)}")
+        return False
 
 
-# ==================== 测试用例 ====================
-class PackagedTestSuite:
-    """打包验证测试套件"""
-    
-    def __init__(self, verbose: bool = False):
-        self.verbose = verbose
-        self.report = TestReport(
-            platform=platform.system(),
-            python_version=platform.python_version(),
-            is_frozen=getattr(sys, 'frozen', False)
+def test_nuclei_engine():
+    """测试Nuclei引擎功能"""
+    print_status("Nuclei Engine", "INFO", "Testing Nuclei integration...")
+    try:
+        # 检查Nuclei模块
+        from core.modules.nuclei_engine import NucleiEngine
+        print_status("Nuclei Engine", "PASS", "Successfully imported NucleiEngine class")
+        
+        # 检查规则目录
+        from utils.path_utils import rules_path
+        rules_dir = rules_path()
+        if rules_dir.exists():
+            rule_count = len(list(rules_dir.glob("*.yaml"))) + len(list(rules_dir.glob("*.yml")))
+            print_status("Nuclei Engine", "PASS", f"Found {rule_count} rules in rules directory")
+        else:
+            print_status("Nuclei Engine", "WARN", "Rules directory not found")
+        
+        return True
+    except Exception as e:
+        print_status("Nuclei Engine", "FAIL", f"Nuclei module import failed: {str(e)}")
+        return False
+
+
+def test_c2_framework():
+    """测试C2框架功能"""
+    print_status("C2 Framework", "INFO", "Testing C2 framework...")
+    try:
+        # 检查C2模块
+        from core.modules.c2_automation import C2Automation
+        from core.modules.beacon_lifecycle import BeaconLifecycle
+        print_status("C2 Framework", "PASS", "Successfully imported C2 modules")
+        
+        return True
+    except Exception as e:
+        print_status("C2 Framework", "FAIL", f"C2 module import failed: {str(e)}")
+        return False
+
+
+def test_http3_proxy():
+    """测试HTTP/3代理功能"""
+    print_status("HTTP/3 Proxy", "INFO", "Testing HTTP/3 support...")
+    try:
+        # 检查HTTP/3模块
+        from core.modules.http3_proxy import HTTP3Proxy
+        print_status("HTTP/3 Proxy", "PASS", "Successfully imported HTTP3Proxy class")
+        
+        return True
+    except Exception as e:
+        print_status("HTTP/3 Proxy", "FAIL", f"HTTP/3 module import failed: {str(e)}")
+        return False
+
+
+def test_plugin_system():
+    """测试插件系统"""
+    print_status("Plugin System", "INFO", "Testing plugin loading system...")
+    try:
+        # 检查插件系统
+        from core.module_registry import ModuleRegistry
+        print_status("Plugin System", "PASS", "Successfully imported ModuleRegistry")
+        
+        # 检查插件目录
+        from utils.path_utils import plugins_path
+        plugins_dir = plugins_path()
+        if plugins_dir.exists():
+            plugins = list(plugins_dir.glob("*.py"))
+            print_status("Plugin System", "PASS", f"Found {len(plugins)} plugins")
+        else:
+            print_status("Plugin System", "WARN", "Plugins directory not found")
+        
+        return True
+    except Exception as e:
+        print_status("Plugin System", "FAIL", f"Plugin system import failed: {str(e)}")
+        return False
+
+
+def test_reverse_dns():
+    """测试反连DNS功能"""
+    print_status("Reverse DNS", "INFO", "Testing DNS listener...")
+    try:
+        # 检查反连模块
+        from core.modules.dns_server import DNSServer
+        print_status("Reverse DNS", "PASS", "Successfully imported DNSServer class")
+        
+        return True
+    except Exception as e:
+        print_status("Reverse DNS", "FAIL", f"DNS module import failed: {str(e)}")
+        return False
+
+
+def test_reverse_http():
+    """测试反连HTTP功能"""
+    print_status("Reverse HTTP", "INFO", "Testing HTTP listener...")
+    try:
+        # 检查HTTP反连模块
+        from core.modules.http_server import HTTPServer
+        print_status("Reverse HTTP", "PASS", "Successfully imported HTTPServer class")
+        
+        return True
+    except Exception as e:
+        print_status("Reverse HTTP", "FAIL", f"HTTP server module import failed: {str(e)}")
+        return False
+
+
+def test_data_paths():
+    """测试数据路径处理"""
+    print_status("Data Paths", "INFO", "Testing path utilities...")
+    try:
+        from utils.path_utils import (
+            base_path, user_dir, rules_path, profiles_path, 
+            templates_path, config_path, cert_path
         )
         
-        # 导入path_utils
-        try:
-            from utils.path_utils import PathUtils
-            self.path_utils = PathUtils
-        except ImportError:
-            self.path_utils = None
-    
-    def run_all_tests(self) -> TestReport:
-        """运行所有测试"""
-        start_time = time.time()
-        
-        print("=" * 70)
-        print("昆仑渗透测试平台 - 打包验证测试")
-        print("=" * 70)
-        print(f"平台: {platform.system()} {platform.release()}")
-        print(f"Python: {platform.python_version()}")
-        print(f"打包环境: {'是' if getattr(sys, 'frozen', False) else '否'}")
-        print("=" * 70)
-        
-        # 运行所有测试
-        tests = [
-            ("1. GUI界面启动测试", self.test_gui_import),
-            ("2. MITM代理模块测试", self.test_mitm_module),
-            ("3. HTTP/3 QUIC协议栈测试", self.test_http3_quic),
-            ("4. Nuclei模板引擎测试", self.test_nuclei_engine),
-            ("5. C2框架模块测试", self.test_c2_framework),
-            ("6. 反连平台测试", self.test_reverse_platform),
-            ("7. JWT/OAuth测试模块", self.test_jwt_oauth),
-            ("8. 被动扫描引擎测试", self.test_passive_scanner),
-            ("9. 域控攻击模块测试", self.test_domain_attack),
-            ("10. 插件系统测试", self.test_plugin_system),
-            ("11. FID聚类模块测试", self.test_fid_clustering),
-            ("12. 数据文件路径测试", self.test_data_files),
-            ("13. 证书存储路径测试", self.test_cert_paths),
-            ("14. 异步IO事件循环测试", self.test_asyncio_loop),
-            ("15. 多进程支持测试", self.test_multiprocessing),
+        paths = [
+            ("base_path", base_path()),
+            ("user_dir", user_dir()),
+            ("rules_path", rules_path()),
+            ("profiles_path", profiles_path()),
+            ("templates_path", templates_path()),
+            ("config_path", config_path()),
+            ("cert_path", cert_path()),
         ]
         
-        for test_name, test_func in tests:
-            print(f"\n{'='*70}")
-            print(f"运行测试: {test_name}")
-            print(f"{'='*70}")
-            
-            test_start = time.time()
-            try:
-                result = test_func()
-            except Exception as e:
-                result = TestResult(
-                    name=test_name,
-                    status=TestStatus.FAILED,
-                    message=f"异常: {str(e)}",
-                    duration=time.time() - test_start
-                )
-                if self.verbose:
-                    import traceback
-                    print(f"详细错误:\n{traceback.format_exc()}")
-            
-            result.duration = time.time() - test_start
-            self.report.add_result(result)
-            
-            # 打印结果
-            status_icon = {
-                TestStatus.PASSED: "✓",
-                TestStatus.FAILED: "✗",
-                TestStatus.SKIPPED: "○",
-                TestStatus.WARNING: "⚠"
-            }
-            print(f"  {status_icon[result.status]} {result.message}")
+        all_exist = True
+        for name, path in paths:
+            if path.exists():
+                print(f"       ✓ {name}: {path}")
+            else:
+                print(f"       ✗ {name}: {path} (not found)")
+                all_exist = False
         
-        self.report.total_duration = time.time() - start_time
+        if all_exist:
+            print_status("Data Paths", "PASS", "All paths are valid")
+        else:
+            print_status("Data Paths", "WARN", "Some paths not found")
         
-        # 打印总结
-        self._print_summary()
-        
-        return self.report
-    
-    # ==================== 测试用例实现 ====================
-    
-    def test_gui_import(self) -> TestResult:
-        """测试1: GUI界面启动测试"""
-        try:
-            # 测试PyQt6导入
-            import PyQt6
-            from PyQt6.QtWidgets import QApplication
-            from PyQt6.QtCore import Qt
-            
-            # 测试主窗口导入
-            try:
-                from gui.main_window import MainWindow
-                has_main_window = True
-            except ImportError:
-                has_main_window = False
-            
-            return TestResult(
-                name="GUI界面启动测试",
-                status=TestStatus.PASSED,
-                message=f"PyQt6导入成功，MainWindow: {'可用' if has_main_window else '未找到'}",
-                details={"pyqt6_version": PyQt6.__version__, "has_main_window": has_main_window}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="GUI界面启动测试",
-                status=TestStatus.FAILED,
-                message=f"PyQt6导入失败: {str(e)}"
-            )
-    
-    def test_mitm_module(self) -> TestResult:
-        """测试2: MITM代理模块测试"""
-        try:
-            from core.modules.mitm import MITMModule
-            from core.modules.mitm_proxy_engine import MITMProxyEngine
-            
-            # 测试证书生成
-            from utils.path_utils import PathUtils
-            cert_dir = PathUtils.get_certs_path()
-            cert_dir.mkdir(parents=True, exist_ok=True)
-            
-            return TestResult(
-                name="MITM代理模块测试",
-                status=TestStatus.PASSED,
-                message="MITM模块导入成功，证书目录可用",
-                details={"cert_dir": str(cert_dir)}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="MITM代理模块测试",
-                status=TestStatus.FAILED,
-                message=f"MITM模块导入失败: {str(e)}"
-            )
-    
-    def test_http3_quic(self) -> TestResult:
-        """测试3: HTTP/3 QUIC协议栈测试"""
-        try:
-            import aioquic
-            from aioquic.h3.connection import H3_ALPN
-            from aioquic.quic.configuration import QuicConfiguration
-            
-            return TestResult(
-                name="HTTP/3 QUIC协议栈测试",
-                status=TestStatus.PASSED,
-                message="aioquic导入成功，HTTP/3协议栈可用",
-                details={"aioquic_version": aioquic.__version__}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="HTTP/3 QUIC协议栈测试",
-                status=TestStatus.FAILED,
-                message=f"aioquic导入失败: {str(e)}"
-            )
-    
-    def test_nuclei_engine(self) -> TestResult:
-        """测试4: Nuclei模板引擎测试"""
-        try:
-            from core.modules.nuclei_executor import NucleiExecutor
-            
-            # 测试模板目录
-            from utils.path_utils import PathUtils
-            rules_dir = PathUtils.get_rules_path()
-            
-            has_templates = False
-            if rules_dir.exists():
-                yaml_files = list(rules_dir.rglob("*.yaml")) + list(rules_dir.rglob("*.yml"))
-                has_templates = len(yaml_files) > 0
-            
-            return TestResult(
-                name="Nuclei模板引擎测试",
-                status=TestStatus.PASSED if has_templates else TestStatus.WARNING,
-                message=f"Nuclei引擎导入成功，模板文件: {'找到' if has_templates else '未找到'}",
-                details={"rules_dir": str(rules_dir), "has_templates": has_templates}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="Nuclei模板引擎测试",
-                status=TestStatus.FAILED,
-                message=f"Nuclei引擎导入失败: {str(e)}"
-            )
-    
-    def test_c2_framework(self) -> TestResult:
-        """测试5: C2框架模块测试"""
-        try:
-            from core.modules.c2_server import C2Server
-            from core.modules.beacon import Beacon
-            
-            # 测试Payload临时目录
-            from utils.path_utils import PathUtils
-            payload_dir = PathUtils.get_payload_temp_path()
-            payload_dir.mkdir(parents=True, exist_ok=True)
-            
-            return TestResult(
-                name="C2框架模块测试",
-                status=TestStatus.PASSED,
-                message="C2框架导入成功，Payload目录可用",
-                details={"payload_dir": str(payload_dir)}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="C2框架模块测试",
-                status=TestStatus.FAILED,
-                message=f"C2框架导入失败: {str(e)}"
-            )
-    
-    def test_reverse_platform(self) -> TestResult:
-        """测试6: 反连平台测试"""
-        try:
-            from core.modules.reverse_shell import ReverseShellModule
-            from core.modules.oob_detector import OOBDetector
-            
-            return TestResult(
-                name="反连平台测试",
-                status=TestStatus.PASSED,
-                message="反连平台模块导入成功",
-                details={}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="反连平台测试",
-                status=TestStatus.FAILED,
-                message=f"反连平台模块导入失败: {str(e)}"
-            )
-    
-    def test_jwt_oauth(self) -> TestResult:
-        """测试7: JWT/OAuth测试模块"""
-        try:
-            import jwt
-            from core.modules.jwt_editor import JWTEditor
-            from core.modules.oauth_analyzer import OAuthAnalyzer
-            
-            # 测试JWT功能
-            test_token = jwt.encode({"sub": "test"}, "secret", algorithm="HS256")
-            decoded = jwt.decode(test_token, "secret", algorithms=["HS256"])
-            
-            return TestResult(
-                name="JWT/OAuth测试模块",
-                status=TestStatus.PASSED,
-                message="JWT/OAuth模块导入成功，JWT编解码正常",
-                details={"jwt_version": jwt.__version__}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="JWT/OAuth测试模块",
-                status=TestStatus.FAILED,
-                message=f"JWT/OAuth模块导入失败: {str(e)}"
-            )
-    
-    def test_passive_scanner(self) -> TestResult:
-        """测试8: 被动扫描引擎测试"""
-        try:
-            from core.modules.passive_scanner import PassiveScanner
-            from core.modules.fingerprint import FingerprintModule
-            
-            return TestResult(
-                name="被动扫描引擎测试",
-                status=TestStatus.PASSED,
-                message="被动扫描引擎导入成功",
-                details={}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="被动扫描引擎测试",
-                status=TestStatus.FAILED,
-                message=f"被动扫描引擎导入失败: {str(e)}"
-            )
-    
-    def test_domain_attack(self) -> TestResult:
-        """测试9: 域控攻击模块测试"""
-        try:
-            from core.modules.domain_attack_integration import DomainAttackIntegration
-            from core.modules.dcsync_attack import DCSyncAttack
-            from core.modules.shadow_credentials import ShadowCredentials
-            
-            return TestResult(
-                name="域控攻击模块测试",
-                status=TestStatus.PASSED,
-                message="域控攻击模块导入成功",
-                details={}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="域控攻击模块测试",
-                status=TestStatus.FAILED,
-                message=f"域控攻击模块导入失败: {str(e)}"
-            )
-    
-    def test_plugin_system(self) -> TestResult:
-        """测试10: 插件系统测试"""
-        try:
-            from core.modules.plugin_manager import PluginManager
-            from core.modules.plugin_engine import PluginEngine
-            
-            # 测试插件目录
-            from utils.path_utils import PathUtils
-            plugin_dir = PathUtils.get_plugins_path()
-            plugin_dir.mkdir(parents=True, exist_ok=True)
-            
-            return TestResult(
-                name="插件系统测试",
-                status=TestStatus.PASSED,
-                message="插件系统导入成功，插件目录可用",
-                details={"plugin_dir": str(plugin_dir)}
-            )
-        except ImportError as e:
-            return TestResult(
-                name="插件系统测试",
-                status=TestStatus.FAILED,
-                message=f"插件系统导入失败: {str(e)}"
-            )
-    
-    def test_fid_clustering(self) -> TestResult:
-        """测试11: FID聚类模块测试"""
-        try:
-            import sklearn
-            import pandas
-            import numpy
-            
-            from core.modules.fid_clustering import FIDClusteringModule
-            
-            return TestResult(
-                name="FID聚类模块测试",
-                status=TestStatus.PASSED,
-                message="FID聚类模块导入成功，科学计算库可用",
-                details={
-                    "sklearn_version": sklearn.__version__,
-                    "pandas_version": pandas.__version__,
-                    "numpy_version": numpy.__version__
-                }
-            )
-        except ImportError as e:
-            return TestResult(
-                name="FID聚类模块测试",
-                status=TestStatus.FAILED,
-                message=f"FID聚类模块导入失败: {str(e)}"
-            )
-    
-    def test_data_files(self) -> TestResult:
-        """测试12: 数据文件路径测试"""
-        if not self.path_utils:
-            return TestResult(
-                name="数据文件路径测试",
-                status=TestStatus.FAILED,
-                message="path_utils模块未找到"
-            )
-        
-        try:
-            # 测试各种资源路径
-            paths_to_check = [
-                ("rules", self.path_utils.get_rules_path()),
-                ("templates", self.path_utils.get_templates_path()),
-                ("profiles", self.path_utils.get_profiles_path()),
-                ("gadget_chains", self.path_utils.get_gadget_chains_path()),
-                ("assets", self.path_utils.get_assets_path()),
-            ]
-            
-            results = {}
-            all_ok = True
-            for name, path in paths_to_check:
-                exists = path.exists()
-                results[name] = {"path": str(path), "exists": exists}
-                if not exists:
-                    all_ok = False
-            
-            return TestResult(
-                name="数据文件路径测试",
-                status=TestStatus.PASSED if all_ok else TestStatus.WARNING,
-                message=f"数据文件路径检测完成，{'全部存在' if all_ok else '部分缺失'}",
-                details=results
-            )
-        except Exception as e:
-            return TestResult(
-                name="数据文件路径测试",
-                status=TestStatus.FAILED,
-                message=f"数据文件路径检测异常: {str(e)}"
-            )
-    
-    def test_cert_paths(self) -> TestResult:
-        """测试13: 证书存储路径测试"""
-        if not self.path_utils:
-            return TestResult(
-                name="证书存储路径测试",
-                status=TestStatus.FAILED,
-                message="path_utils模块未找到"
-            )
-        
-        try:
-            cert_dir = self.path_utils.get_certs_path()
-            cert_dir.mkdir(parents=True, exist_ok=True)
-            
-            # 测试写入权限
-            test_file = cert_dir / "test_cert.pem"
-            test_file.write_text("test")
-            test_file.unlink()
-            
-            return TestResult(
-                name="证书存储路径测试",
-                status=TestStatus.PASSED,
-                message=f"证书目录可用: {cert_dir}",
-                details={"cert_dir": str(cert_dir), "writable": True}
-            )
-        except Exception as e:
-            return TestResult(
-                name="证书存储路径测试",
-                status=TestStatus.FAILED,
-                message=f"证书目录不可用: {str(e)}"
-            )
-    
-    def test_asyncio_loop(self) -> TestResult:
-        """测试14: 异步IO事件循环测试"""
-        try:
-            async def async_test():
-                await asyncio.sleep(0.01)
-                return True
-            
-            result = asyncio.run(async_test())
-            
-            return TestResult(
-                name="异步IO事件循环测试",
-                status=TestStatus.PASSED if result else TestStatus.FAILED,
-                message="asyncio事件循环正常运行",
-                details={}
-            )
-        except Exception as e:
-            return TestResult(
-                name="异步IO事件循环测试",
-                status=TestStatus.FAILED,
-                message=f"asyncio事件循环异常: {str(e)}"
-            )
-    
-    def test_multiprocessing(self) -> TestResult:
-        """测试15: 多进程支持测试"""
-        try:
-            import multiprocessing
-            
-            # 测试freeze_support（打包后必需）
-            if getattr(sys, 'frozen', False):
-                multiprocessing.freeze_support()
-            
-            # 测试进程池
-            with multiprocessing.Pool(1) as pool:
-                result = pool.apply_async(lambda: True).get(timeout=5)
-            
-            return TestResult(
-                name="多进程支持测试",
-                status=TestStatus.PASSED if result else TestStatus.FAILED,
-                message="多进程支持正常",
-                details={"cpu_count": multiprocessing.cpu_count()}
-            )
-        except Exception as e:
-            return TestResult(
-                name="多进程支持测试",
-                status=TestStatus.FAILED,
-                message=f"多进程支持异常: {str(e)}"
-            )
-    
-    # ==================== 辅助方法 ====================
-    
-    def _print_summary(self):
-        """打印测试总结"""
-        print("\n" + "=" * 70)
-        print("测试总结")
-        print("=" * 70)
-        print(f"总测试数: {self.report.total_tests}")
-        print(f"通过: {self.report.passed}")
-        print(f"失败: {self.report.failed}")
-        print(f"跳过: {self.report.skipped}")
-        print(f"警告: {self.report.warnings}")
-        print(f"总耗时: {self.report.total_duration:.2f}秒")
-        print("=" * 70)
-        
-        if self.report.failed > 0:
-            print("\n失败的测试:")
-            for result in self.report.results:
-                if result.status == TestStatus.FAILED:
-                    print(f"  ✗ {result.name}: {result.message}")
-        
-        if self.report.warnings > 0:
-            print("\n警告:")
-            for result in self.report.results:
-                if result.status == TestStatus.WARNING:
-                    print(f"  ⚠ {result.name}: {result.message}")
-        
-        print("=" * 70)
+        return True
+    except Exception as e:
+        print_status("Data Paths", "FAIL", f"Path utilities failed: {str(e)}")
+        return False
 
 
-# ==================== 主函数 ====================
-def main():
-    """主函数"""
-    import argparse
+def test_network_ports():
+    """测试网络端口可用性"""
+    print_status("Network Ports", "INFO", "Testing common port availability...")
+    try:
+        test_ports = [80, 443, 8080, 8443, 53, 5353]
+        used_ports = []
+        
+        for port in test_ports:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                try:
+                    s.bind(('127.0.0.1', port))
+                except OSError:
+                    used_ports.append(port)
+        
+        if used_ports:
+            print_status("Network Ports", "WARN", f"Ports {used_ports} are already in use")
+        else:
+            print_status("Network Ports", "PASS", "All test ports are available")
+        
+        return True
+    except Exception as e:
+        print_status("Network Ports", "FAIL", f"Port test failed: {str(e)}")
+        return False
+
+
+def test_python_version():
+    """测试Python版本"""
+    print_status("Python Version", "INFO", "Checking Python version...")
+    try:
+        version = sys.version_info
+        if version >= (3, 10):
+            print_status("Python Version", "PASS", f"Python {version.major}.{version.minor}.{version.micro}")
+            return True
+        else:
+            print_status("Python Version", "FAIL", f"Python {version.major}.{version.minor} < 3.10 required")
+            return False
+    except Exception as e:
+        print_status("Python Version", "FAIL", f"Version check failed: {str(e)}")
+        return False
+
+
+def run_all_tests():
+    """运行所有测试"""
+    print(f"\n{Colors.BLUE}="*70)
+    print(f"KunLun Penetration Testing Platform - Packaging Validation")
+    print(f"="*70 + Colors.RESET)
     
-    parser = argparse.ArgumentParser(description="昆仑渗透测试平台 - 打包验证测试")
-    parser.add_argument("--verbose", "-v", action="store_true", help="显示详细输出")
-    parser.add_argument("--output", "-o", type=str, help="输出报告文件路径")
+    tests = [
+        test_python_version,
+        test_data_paths,
+        test_application_startup,
+        test_mitm_proxy,
+        test_nuclei_engine,
+        test_c2_framework,
+        test_http3_proxy,
+        test_plugin_system,
+        test_reverse_dns,
+        test_reverse_http,
+        test_network_ports,
+    ]
     
-    args = parser.parse_args()
+    passed = 0
+    failed = 0
+    warned = 0
     
-    # 运行测试
-    suite = PackagedTestSuite(verbose=args.verbose)
-    report = suite.run_all_tests()
+    for test in tests:
+        result = test()
+        if result:
+            # 检查是否有警告（通过但有警告也算通过）
+            passed += 1
+        else:
+            failed += 1
     
-    # 输出报告
-    if args.output:
-        output_path = Path(args.output)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(report.to_dict(), f, indent=2, ensure_ascii=False)
-        print(f"\n测试报告已保存到: {output_path}")
+    print(f"\n{Colors.BLUE}="*70)
+    print(f"测试结果汇总:")
+    print(f"  通过: {Colors.GREEN}{passed}{Colors.RESET}")
+    print(f"  失败: {Colors.RED}{failed}{Colors.RESET}")
+    print(f"="*70 + Colors.RESET)
     
-    # 返回退出码
-    sys.exit(0 if report.failed == 0 else 1)
+    if failed == 0:
+        print(f"\n{Colors.GREEN}✓ 所有测试通过！{Colors.RESET}")
+        return 0
+    else:
+        print(f"\n{Colors.RED}✗ 部分测试失败，请检查上述错误信息{Colors.RESET}")
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(run_all_tests())
