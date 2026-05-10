@@ -191,9 +191,9 @@ def run_pyarmor(
     返回：
         是否成功
     """
-    # 构建PyArmor命令
+    # 构建PyArmor命令 (PyArmor 7.x 使用直接命令)
     cmd = [
-        sys.executable, "-m", "pyarmor",
+        "pyarmor",
         "gen",
         "--output", str(output_dir),
         "--obf-code", str(obf_code),
@@ -271,9 +271,9 @@ def run_pyarmor_batch(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # PyArmor 7.x command syntax
+    # PyArmor 7.x command syntax (直接使用pyarmor命令)
     cmd = [
-        sys.executable, "-m", "pyarmor",
+        "pyarmor",
         "gen",
         "--output", str(output_dir),
         "--restrict", "4",
@@ -424,10 +424,10 @@ def main():
     print(f"批量加密: {args.batch}")
     print("=" * 60)
     
-    # Check PyArmor installation
+    # Check PyArmor installation (PyArmor 7.x 使用直接命令)
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pyarmor", "--version"],
+            ["pyarmor", "--version"],
             capture_output=True,
             text=True
         )
@@ -435,9 +435,9 @@ def main():
             print(f"PyArmor installed: {result.stdout.strip()}")
         else:
             print("PyArmor not found, installing...")
-            subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor"], check=True)
+            subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor<8.0"], check=True)
             result = subprocess.run(
-                [sys.executable, "-m", "pyarmor", "--version"],
+                ["pyarmor", "--version"],
                 capture_output=True,
                 text=True
             )
