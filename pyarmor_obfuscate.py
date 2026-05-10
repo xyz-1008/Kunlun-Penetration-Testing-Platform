@@ -122,140 +122,15 @@ EXCLUDE_PATTERNS = [
     "env/",
 ]
 
-# 敏感字符串模式（需要额外加密）
-SENSITIVE_PATTERNS = [
-    "jwt_secret",
-    "api_key",
-    "password",
-    "token",
-    "secret",
-    "credential",
-    "private_key",
-    "access_key",
-    "auth_token",
-]
 
-
-def get_python_files(root: Path, exclude_patterns: List[str]) -> List[Path]:
-    """获取需要加密的Python文件列表"""
-    python_files = []
-    
-    for py_file in root.rglob("*.py"):
-        # 检查是否在排除列表中
-        should_exclude = False
-        rel_path = py_file.relative_to(root)
-        
-        for pattern in exclude_patterns:
-            if pattern.endswith("/"):
-                # 目录排除
-                if rel_path.parts[0] == pattern.rstrip("/"):
-                    should_exclude = True
-                    break
-            elif py_file.match(pattern):
-                should_exclude = True
-                break
-        
-        if not should_exclude:
-            python_files.append(py_file)
-    
-    return python_files
-
-
-def run_pyarmor(
-    input_dir: Path,
-    output_dir: Path,
-    advanced: bool = True,
-    string_encrypt: bool = True,
-    obf_code: int = 2,
-    obf_mod: int = 2,
-    wrap_mode: bool = True,
-    restrict_mode: int = 4,
-    expire: str = None,
-    license_file: str = None,
-) -> bool:
-    """
-    运行PyArmor加密
-    
-    参数：
-        input_dir: 输入目录
-        output_dir: 输出目录
-        advanced: 使用高级模式
-        string_encrypt: 加密字符串常量
-        obf_code: 代码混淆级别 (0-2)
-        obf_mod: 模块混淆级别 (0-2)
-        wrap_mode: 包装模式
-        restrict_mode: 限制模式 (0-4)
-        expire: 过期时间 (YYYY-MM-DD)
-        license_file: 许可证文件路径
-    
-    返回：
-        是否成功
-    """
-    # 构建PyArmor命令 (PyArmor 7.x 使用直接命令)
-    cmd = [
-        "pyarmor",
-        "gen",
-        "--output", str(output_dir),
-        "--obf-code", str(obf_code),
-        "--obf-mod", str(obf_mod),
-        "--restrict", str(restrict_mode),
-    ]
-    
-    if advanced:
-        cmd.append("--advanced")
-    
-    if string_encrypt:
-        cmd.append("--enable-str-crypto")
-    
-    if wrap_mode:
-        cmd.append("--wrap-mode")
-    
-    if expire:
-        cmd.extend(["--expire", expire])
-    
-    if license_file:
-        cmd.extend(["--with-license", license_file])
-    
-    # 添加输入文件
-    cmd.append(str(input_dir / "main.py"))
-    
-    print(f"执行PyArmor命令: {' '.join(cmd)}")
-    
-    try:
-        result = subprocess.run(
-            cmd,
-            cwd=input_dir,
-            capture_output=True,
-            text=True,
-            timeout=3600,  # 1小时超时
-        )
-        
-        if result.returncode == 0:
-            print("✓ PyArmor加密成功")
-            print(f"输出目录: {output_dir}")
-            return True
-        else:
-            print("✗ PyArmor加密失败")
-            print(f"stdout: {result.stdout}")
-            print(f"stderr: {result.stderr}")
-            return False
-            
-    except subprocess.TimeoutExpired:
-        print("✗ PyArmor加密超时")
-        return False
-    except Exception as e:
-        print(f"✗ PyArmor加密异常: {e}")
-        return False
-
-
-def run_pyarmor_batch(
+def run_pyarmor_obfuscate(
     project_root: Path,
     output_dir: Path,
     advanced: bool = True,
     string_encrypt: bool = True,
 ) -> bool:
     """
-    批量加密整个项目
+    使用PyArmor 7.x进行批量加密（使用obfuscate命令）
     
     参数：
         project_root: 项目根目录
@@ -271,10 +146,11 @@ def run_pyarmor_batch(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # PyArmor 7.x command syntax (直接使用pyarmor命令)
+    # PyArmor 7.x 使用 obfuscate 命令（简写为 o）
+    # 命令格式: pyarmor obfuscate [选项] 入口文件
     cmd = [
         "pyarmor",
-        "gen",
+        "obfuscate",  # PyArmor 7.x 使用 obfuscate 而非 gen
         "--output", str(output_dir),
         "--restrict", "4",
         "--recursive",
@@ -282,22 +158,21 @@ def run_pyarmor_batch(
         "--obf-mod", "2",
     ]
     
-    # PyArmor 7.x flags
     if advanced:
         cmd.append("--advanced")
     
     if string_encrypt:
         cmd.append("--enable-str-crypto")
     
-    # Add exclude patterns
+    # 添加排除模式
     for pattern in EXCLUDE_PATTERNS:
-        if pattern.endswith(".py") or pattern.startswith("*"):
+        if pattern.startswith("*"):
             cmd.extend(["--exclude", pattern])
     
-    # Add entry file
+    # 添加入口文件
     cmd.append(str(project_root / "main.py"))
     
-    print(f"Running PyArmor command: {' '.join(cmd)}")
+    print(f"执行PyArmor命令: {' '.join(cmd)}")
     
     try:
         result = subprocess.run(
@@ -305,24 +180,28 @@ def run_pyarmor_batch(
             cwd=project_root,
             capture_output=True,
             text=True,
-            timeout=7200,  # 2 hour timeout
+            timeout=7200,  # 2小时超时
+            env={**os.environ, "PYTHONIOENCODING": "utf-8"}
         )
         
         if result.returncode == 0:
-            print("PyArmor batch encryption successful")
-            print(f"Output directory: {output_dir}")
+            print("✓ PyArmor加密成功")
+            print(f"输出目录: {output_dir}")
             return True
         else:
-            print("PyArmor batch encryption failed")
-            print(f"stdout: {result.stdout}")
-            print(f"stderr: {result.stderr}")
+            print("✗ PyArmor加密失败")
+            print(f"返回码: {result.returncode}")
+            print(f"标准输出: {result.stdout}")
+            print(f"错误输出: {result.stderr}")
             return False
             
     except subprocess.TimeoutExpired:
-        print("PyArmor batch encryption timeout")
+        print("✗ PyArmor加密超时")
         return False
     except Exception as e:
-        print(f"PyArmor batch encryption error: {e}")
+        print(f"✗ PyArmor加密异常: {e}")
+        import traceback
+        print(traceback.format_exc())
         return False
 
 
@@ -390,22 +269,6 @@ def main():
         default=str(DEFAULT_OUTPUT),
         help="输出目录路径",
     )
-    parser.add_argument(
-        "--expire",
-        type=str,
-        help="许可证过期时间 (YYYY-MM-DD)",
-    )
-    parser.add_argument(
-        "--license",
-        type=str,
-        help="许可证文件路径",
-    )
-    parser.add_argument(
-        "--batch",
-        action="store_true",
-        default=True,
-        help="使用批量加密模式（默认启用）",
-    )
     
     args = parser.parse_args()
     
@@ -421,48 +284,46 @@ def main():
     print(f"输出目录: {output_dir}")
     print(f"高级模式: {advanced}")
     print(f"字符串加密: {string_encrypt}")
-    print(f"批量加密: {args.batch}")
     print("=" * 60)
     
-    # Check PyArmor installation (PyArmor 7.x 使用直接命令)
+    # 检查PyArmor安装 (PyArmor 7.x)
     try:
         result = subprocess.run(
             ["pyarmor", "--version"],
             capture_output=True,
-            text=True
+            text=True,
+            env={**os.environ, "PYTHONIOENCODING": "utf-8"}
         )
         if result.returncode == 0:
-            print(f"PyArmor installed: {result.stdout.strip()}")
+            version_output = result.stdout.strip()
+            print(f"PyArmor已安装: {version_output}")
         else:
-            print("PyArmor not found, installing...")
-            subprocess.run([sys.executable, "-m", "pip", "install", "pyarmor<8.0"], check=True)
+            print("PyArmor未找到，正在安装...")
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", "pyarmor<8.0"],
+                check=True,
+                capture_output=True
+            )
             result = subprocess.run(
                 ["pyarmor", "--version"],
                 capture_output=True,
-                text=True
+                text=True,
+                env={**os.environ, "PYTHONIOENCODING": "utf-8"}
             )
-            print(f"PyArmor installed: {result.stdout.strip()}")
+            print(f"PyArmor安装成功: {result.stdout.strip()}")
     except Exception as e:
-        print(f"PyArmor check failed: {e}")
+        print(f"PyArmor检查失败: {e}")
+        import traceback
+        print(traceback.format_exc())
         sys.exit(1)
     
     # 执行加密
-    if args.batch:
-        success = run_pyarmor_batch(
-            project_root=PROJECT_ROOT,
-            output_dir=output_dir,
-            advanced=advanced,
-            string_encrypt=string_encrypt,
-        )
-    else:
-        success = run_pyarmor(
-            input_dir=PROJECT_ROOT,
-            output_dir=output_dir,
-            advanced=advanced,
-            string_encrypt=string_encrypt,
-            expire=args.expire,
-            license_file=args.license,
-        )
+    success = run_pyarmor_obfuscate(
+        project_root=PROJECT_ROOT,
+        output_dir=output_dir,
+        advanced=advanced,
+        string_encrypt=string_encrypt,
+    )
     
     if success:
         # 复制数据文件
