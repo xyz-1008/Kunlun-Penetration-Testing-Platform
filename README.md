@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 昆仑渗透测试平台 (KunLun Penetration Testing Platform)
 
 <div align="center">
@@ -10,11 +11,23 @@
 **一款企业级全功能渗透测试平台 | 295+模块 | AI驱动 | 跨平台**
 
 [功能特性](#-功能特性) • [快速开始](#-快速开始) • [安装说明](#-安装说明) • [模块列表](#-模块列表) • [打包发布](#-打包发布) • [技术支持](#-技术支持)
+=======
+# 昆仑安全测试平台 Pro v1.0
+
+<div align="center">
+
+**自动化渗透测试桌面应用**
+
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/xyz-1008/Kunlun-Penetration-Testing-Platform/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+>>>>>>> 1e3868f81504fbff990a75cd3c46bc563f1b315d
 
 </div>
 
 ---
 
+<<<<<<< HEAD
 ## 📖 项目简介
 
 昆仑渗透测试平台是一款功能强大的企业级渗透测试工具，集成295+专业安全测试模块，涵盖信息收集、漏洞扫描、漏洞利用、后渗透测试、域控攻击、C2框架等完整攻击链。平台采用PyQt6构建现代化GUI界面，支持CLI命令行模式，适用于Windows、Linux、macOS全平台。
@@ -356,13 +369,119 @@ kunlun/
 - [aioquic](https://github.com/aiortc/aioquic)
 - [scapy](https://scapy.net/)
 - [ cryptography](https://cryptography.io/)
+=======
+## 简介
+
+昆仑安全测试平台是一款专业的自动化渗透测试桌面应用，参考 Burp Suite 的设计理念，为安全研究人员提供全面的安全测试工具集。
+
+## 功能特性
+
+### 核心模块
+
+| 模块 | 功能描述 |
+|------|----------|
+| **Dashboard** | 任务概览、快速操作、事件日志 |
+| **Target** | 目标管理、站点配置、范围定义 |
+| **Proxy** | HTTP/HTTPS 代理拦截、请求修改 |
+| **Intruder** | 暴力破解、字典攻击、自定义Payload |
+| **Repeater** | 请求重放、参数修改、响应分析 |
+| **Sequencer** | 会话令牌分析、随机性检测 |
+| **Decoder** | 编解码工具、哈希计算 |
+| **Comparer** | 数据对比、差异分析 |
+
+### 扩展模块
+
+| 模块 | 功能描述 |
+|------|----------|
+| **MITM代理** | 中间人攻击、流量劫持 |
+| **网络爬虫** | 自动爬取、站点地图生成 |
+| **漏洞扫描** | PoC验证、自动化检测 |
+| **WebFuzzer** | Web模糊测试 |
+| **YakRunner** | 脚本执行引擎 |
+| **端口扫描** | 端口探测、服务识别 |
+| **PoC管理** | 漏洞验证脚本管理 |
+| **反向Shell** | 反弹Shell管理 |
+| **空间搜索** | 网络空间资产搜索 |
+| **插件商店** | 插件市场、扩展管理 |
+| **知识库** | 安全知识库、漏洞库 |
+| **AI安全检测** | AI辅助安全分析 |
+| **攻击编排** | 自动化攻击链编排 |
+| **指纹识别** | 技术栈识别、框架检测 |
+| **资产管理** | 资产发现、管理 |
+| **漏洞管理** | 漏洞跟踪、状态管理 |
+
+## 快速开始
+
+### 系统要求
+
+- **操作系统**: Windows 10/11 (64位)
+- **内存**: 至少 4GB RAM
+- **磁盘空间**: 至少 500MB 可用空间
+- **网络**: 需要网络连接进行在线功能
+
+### 安装步骤
+
+1. 从 [Releases](https://github.com/xyz-1008/Kunlun-Penetration-Testing-Platform/releases) 下载最新版本的 `AutoPenTest.exe`
+2. 双击运行即可，无需安装
+
+### 首次使用
+
+1. 双击 `AutoPenTest.exe` 启动应用
+2. 在 Dashboard 中查看快速操作
+3. 在 Target 中添加测试目标
+4. 使用 Proxy 拦截和修改请求
+5. 使用其他模块进行安全测试
+
+## 界面预览
+
+应用采用 Burp Suite 风格的深色主题设计，包含：
+
+- **顶部菜单栏**: 文件、视图、工具、帮助
+- **模块标签栏**: 快速切换不同功能模块
+- **状态栏**: 显示内存、磁盘使用情况和就绪状态
+
+## 项目结构
+
+```
+Kunlun-Penetration-Testing-Platform/
+├── AutoPenTest.exe          # 主程序（Windows可执行文件）
+├── README.md                # 项目说明文档
+├── USER_GUIDE.md            # 用户使用指南
+├── CHANGELOG.md             # 更新日志
+└── LICENSE                  # MIT 许可证
+```
+
+## 安全声明
+
+本工具仅供安全研究和授权测试使用。使用者应：
+
+- 仅在获得授权的情况下测试目标系统
+- 遵守当地法律法规
+- 对未经授权的测试行为承担全部责任
+
+## 许可证
+
+本项目采用 [MIT License](LICENSE) 开源协议。
+
+## 联系方式
+
+**微信联系方式ID：XY5431008**
+
+**微信公众号：昆仑AI安全实验室**
+
+- **项目地址**: [GitHub](https://github.com/xyz-1008/Kunlun-Penetration-Testing-Platform)
+- **问题反馈**: [Issues](https://github.com/xyz-1008/Kunlun-Penetration-Testing-Platform/issues)
+>>>>>>> 1e3868f81504fbff990a75cd3c46bc563f1b315d
 
 ---
 
 <div align="center">
-
+<<<<<<< HEAD
 **昆仑渗透测试平台** • 让安全测试更智能、更高效
 
 Made with ❤️ by KunLun Security Team
+=======
+**昆仑安全测试平台** - 专业、高效、易用的安全测试工具
+>>>>>>> 1e3868f81504fbff990a75cd3c46bc563f1b315d
 
 </div>
